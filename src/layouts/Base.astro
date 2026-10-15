@@ -3,10 +3,13 @@ import '../styles/global.css';
 import { ui, prefix, homeUrl, alternatePath, localeFromPath, type Locale } from '../lib/i18n';
 import { getImage } from 'astro:assets';
 import meadow from '../assets/meadow.png';
-interface Props { title?: string; description?: string; image?: string; type?: string; locale?: Locale; markdown?: string; }
+import type { ImageMetadata } from 'astro';
+import GoogleAnalytics from '../components/GoogleAnalytics.astro';
+import { google } from '../lib/google.mjs';
+interface Props { title?: string; description?: string; image?: ImageMetadata; imageAlt?: string; type?: string; locale?: Locale; markdown?: string; noindex?: boolean; modifiedAt?: string; }
 const locale = Astro.props.locale || localeFromPath(Astro.url.pathname);
 const t = ui(locale);
-const { title, description = t.siteDescription, image, type = 'website' } = Astro.props;
+const { title, description = t.siteDescription, image, imageAlt, type = 'website', noindex = false, modifiedAt } = Astro.props;
 const siteTitle = t.siteTitle;
 const otherLocale: Locale = locale === 'en' ? 'zh-CN' : 'en';
 const pagePath = Astro.url.pathname === '/404/' ? '/404.html' : Astro.url.pathname;
@@ -24,6 +27,8 @@ const scenery = await getImage({ src: meadow, width: 1400, format: 'webp', quali
     <meta name="color-scheme" content="light" />
     <meta name="theme-color" content="#f7f8f3" />
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    {google.siteVerification && <meta name="google-site-verification" content={google.siteVerification} />}
     <title>{pageTitle}</title>
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang={locale} href={canonical} />
@@ -39,9 +44,14 @@ const scenery = await getImage({ src: meadow, width: 1400, format: 'webp', quali
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    {image && <meta property="og:image" content={new URL(image, Astro.site)} />}
+    {image && <>
+      <meta property="og:image" content={new URL(image.src, Astro.site)} />
+      <meta property="og:image:width" content={image.width} />
+      <meta property="og:image:height" content={image.height} />
+      <meta property="og:image:alt" content={imageAlt} />
+    </>}
+    {type === 'article' && modifiedAt && <meta property="article:modified_time" content={modifiedAt} />}
     <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
-
   </head>
   <body style={`--scenery: url("${scenery.src}")`}>
     <a class="skip-link" href="#main">{t.skip}</a>
@@ -57,6 +67,13 @@ const scenery = await getImage({ src: meadow, width: 1400, format: 'webp', quali
       </nav>
     </header>
     <main id="main"><slot /></main>
-    <footer class="site-footer shell"><p>{t.footer}</p><div><a href={`${prefix(locale)}/rss.xml`}>RSS</a><a href="https://github.com/irideas/notes" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></footer>
+    <footer class="site-footer shell"><p>{t.footer}</p><div>{google.measurementId && !noindex && <button class="analytics-settings" type="button" data-analytics-settings hidden>{t.analyticsSettings}</button>}<a href={`${prefix(locale)}/rss.xml`}>RSS</a><a href="https://github.com/irideas/notes" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></footer>
+    {!noindex && <GoogleAnalytics locale={locale} />}
   </body>
 </html>
+<style>
+  .site-footer{flex-wrap:wrap}
+  .site-footer>div{flex-wrap:wrap;align-items:center}
+  .analytics-settings{padding:0;border:0;background:none;cursor:pointer;font:inherit}
+  .analytics-settings:hover{color:var(--green)}
+</style>

@@ -35,6 +35,10 @@ const en = {
   aboutFour: 'Facts, source authors’ views and this site’s judgments are distinguished. Significant revisions are recorded.',
   subscribe: 'Subscribe via', viewHistory: 'View content and revision history on', or: 'or submit corrections and supporting evidence through',
   notFound: 'Page not found', notFoundDescription: 'Check the address or find an article in the archive.', backHome: 'Back to home',
+  analyticsHeading: 'Visit statistics and privacy',
+  analyticsDescription: 'With your consent, this site uses Google Analytics to understand visits and traffic sources. Google processes page views, referrals, browser and device information, and uses cookies to distinguish browsers. Before you consent, the Google tag is not loaded and no Analytics data is sent. This site does not add names, email addresses or an account User-ID to Analytics, and disables Google signals and advertising personalization in its tag.',
+  analyticsControls: 'Your choice is saved in this browser. Use “Statistics settings” in the footer to change it or withdraw consent; withdrawal stops collection and clears this site’s Analytics cookies. You can also restrict cookies in your browser or use Google’s Analytics opt-out add-on.', googlePrivacy: 'How Google uses data', analyticsOptOut: 'Analytics opt-out',
+  analyticsSettings: 'Statistics settings', analyticsConsent: 'May we use Google Analytics cookies to understand visits and traffic sources? Nothing is sent to Google Analytics unless you agree. You can change your choice in the footer at any time.', analyticsDetails: 'Privacy details', analyticsAccept: 'Allow statistics', analyticsDeny: 'Reject / disable',
 };
 const zh: Record<keyof typeof en, string> = {
   siteTitle: '记点儿信息', siteDescription: '梳理概念与模型，分析系统、组织与人类活动中的机制和变化，形成有依据、可修正的判断。',
@@ -54,6 +58,10 @@ const zh: Record<keyof typeof en, string> = {
   aboutFour: '事实、来源观点与本站判断分别说明，重要修改保留记录。',
   subscribe: '可以通过', viewHistory: '订阅更新，在', or: '查看内容与修改记录，或通过',
   notFound: '页面未找到', notFoundDescription: '请检查链接，或通过年月归档查找文章。', backHome: '返回首页',
+  analyticsHeading: '访问统计与隐私',
+  analyticsDescription: '经你同意后，本站使用 Google Analytics 了解访问情况与来源。Google 会处理页面浏览、来源、浏览器和设备信息，并使用 Cookie 区分浏览器。同意前不加载 Google 统计标签、不发送统计数据。本站不向 Analytics 添加姓名、邮箱或账户 User-ID，统计标签关闭 Google signals 和广告个性化功能。',
+  analyticsControls: '你的选择保存在当前浏览器。可随时通过页脚的“统计设置”更改选择或撤回同意；撤回后停止采集并清除本站的 Analytics Cookie。你也可以在浏览器中限制 Cookie，或使用 Google Analytics 停用插件。', googlePrivacy: 'Google 如何使用数据', analyticsOptOut: '停用 Analytics',
+  analyticsSettings: '统计设置', analyticsConsent: '是否允许使用 Google Analytics Cookie 了解访问情况与来源？同意前不会向 Google Analytics 发送信息。你可以随时通过页脚更改选择。', analyticsDetails: '隐私说明', analyticsAccept: '同意统计', analyticsDeny: '拒绝／停用',
 };
 export const ui = (locale: Locale) => locale === 'en' ? en : zh;
 export const articleCount = (n: number, locale: Locale) => locale === 'en' ? `${n} article${n === 1 ? '' : 's'}` : `${n} 篇文章`;

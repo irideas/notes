@@ -42,24 +42,26 @@ Node.js 默认版本在 [.nvmrc](../../.nvmrc)，最低兼容约束在 [package.
 | 全站样式与响应式布局 | `src/styles/global.css` |
 | 静态 Mermaid 渲染 | `src/lib/markdown-diagrams.mjs` 与 `astro.config.mjs` |
 | RSS 与 sitemap | `src/pages/rss.xml.js`、`src/pages/sitemap.xml.ts` |
+| Google 公开配置、同意控件与隐私披露 | `src/data/google.json`、`src/components/GoogleAnalytics.astro`、`src/lib/analytics-consent.mjs`、`src/components/About.astro` |
 | 图标与爬虫配置 | `public/` |
 | 本地及 CI 命令 | `package.json` 的 scripts |
-| 检查实现 | `scripts/check-project.mjs`、`scripts/check-articles.mjs`、`scripts/check-metadata.test.mjs` |
+| 检查实现 | `scripts/check-project.mjs`、`scripts/check-articles.mjs`、`scripts/check-seo.mjs`、`scripts/check-metadata.test.mjs`、`scripts/check-analytics.test.mjs` |
 | PR 检查和生产发布 | `.github/workflows/check.yml`、`deploy.yml` |
 
 `docs/` 是项目文档，不作为站点文章发布。`node_modules/`、`.astro/` 和 `dist/` 是生成内容，不提交。字段、领域词、命令实现与部署行为各维护一个来源；指南解释其含义，不另抄完整登记表。
 
 ## 检查与通过条件
 
-运行 `npm run check`。命令退出码为 0 才算自动检查通过；错误会指出文件和问题。它先运行时间、身份与元信息语义的回归测试，再执行以下检查：
+运行 `npm run check`。命令退出码为 0 才算自动检查通过；错误会指出文件和问题。它先运行时间、身份、元信息语义及统计同意行为的回归测试，再执行以下检查：
 
 1. Astro 构建：按 schema 验证字段、真实日期、领域词、图片引用与带时区的修改时间；图表语法错误使构建失败。
 2. 源文档：文章目录采用归档年月；正文不重复一级标题；根入口、项目文档和文章的本地文件链接及 Markdown 片段可解析。代码示例中的链接不参与扫描。
 3. 生成页面：内部链接、锚点、图片、脚本、样式存在；每页一个一级标题，ID 唯一，SEO 元信息、语言属性与互相对应的 hreflang 存在，规范地址指向本页，SVG 片段引用有效；无未渲染 Mermaid 代码或公开 DIKW 框架术语。
 4. 双语：每篇有中英两版，来源 ID/URL、首项主要来源、领域词和封面对应，实际编辑时刻独立记录，主要标题、表格与图表数量一致。
-5. RSS 和 sitemap：产物存在，其列出的本站页面可找到，两个订阅源不混入另一语言文章。
+5. RSS 和 sitemap：产物存在，其列出的本站页面可找到，两个订阅源不混入另一语言文章；XML sitemap 完整覆盖可索引页面且不含 404，双语配对与 HTML 一致，文章 `lastmod` 与真实修改时间一致。
 6. OKF 与原稿：只使用标准字段，来源脚注对应；Markdown 封面只渲染一次；GitHub Raw 地址和发现链接指向当前语言原稿，页面时间与 JSON-LD 对应，不生成本站原稿或提交链接。
 7. 评论：每个文章对恰有一个登记编号，无跨文章重复编号或多余登记；两语产物加载同一讨论，界面语言、浅色主题、延迟加载和 GitHub 直达链接正确。远端实际存在性另由 `npm run discussion:check` 核验。
+8. 搜索与统计：唯一标题、描述和规范地址；Open Graph 内容、封面与 Article JSON-LD 一致，首页站名及 404 索引控制正确，robots 可发现 sitemap。Google 配置与页面控件一致，静态 HTML 不提前加载 Google，两个关于页具备隐私披露。配置、同意行为与后台验证见 [搜索发现与访问统计](../operations/search-and-analytics.md)。
 
 它不联网逐条探测外链，也不证明来源真实、论证成立或画面正确。来源核验由 [内容原则](../content/policy.md) 与编辑审核负责。
 

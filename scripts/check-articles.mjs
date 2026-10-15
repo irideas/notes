@@ -29,7 +29,8 @@ export async function checkArticles({root,dist,noteRoot,markdown,pages,report}) 
     if (image && page.tags.filter(tag => tag.name === 'img' && tag.a.alt === image.alt).length !== 1) report(pageFile,'Cover must appear exactly once');
     const jsonLd = page.tags.find(tag => tag.name === 'script' && tag.a.type === 'application/ld+json');
     if (!jsonLd) { report(pageFile,'Missing Article JSON-LD'); continue; }
-    const schema = JSON.parse(text(jsonLd.node));
+    let schema;
+    try { schema = JSON.parse(text(jsonLd.node)); } catch { continue; } // Reported by the page checker.
     if (schema.dateModified !== doc.data.generated.at || schema.dateCreated !== (created || undefined)) report(pageFile,'JSON-LD times differ from content and Git history');
     if (schema.encoding?.contentUrl !== raw) report(pageFile,'JSON-LD Raw URL differs from GitHub source');
   }
