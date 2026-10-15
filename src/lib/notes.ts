@@ -1,7 +1,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 
-export const siteTitle = '记点儿东西';
-export const siteDescription = '看到好东西，记一下。记录想法、经验、启发和故事，也留一点自己的理解。';
+export const siteTitle = '记点儿信息';
+export const siteDescription = '梳理概念与模型，分析系统、组织与人类活动中的机制和变化，形成有依据、可修正的判断。';
 
 export async function allNotes() {
   return (await getCollection('notes')).sort((a, b) => b.data.date.localeCompare(a.data.date) || a.id.localeCompare(b.id));

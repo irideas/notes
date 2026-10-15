@@ -5,13 +5,39 @@ import Base from '../layouts/Base.astro';
 import { allNotes, displayDate, monthTitle, monthUrl, readingTime, tagUrl } from '../lib/notes';
 export async function getStaticPaths() { return (await allNotes()).map(note => ({ params: { id: note.id }, props: { note } })); }
 const { note } = Astro.props;
-const { Content } = await render(note);
+const { Content, headings } = await render(note);
+const sections = headings.filter(heading => heading.depth === 2);
+const sourcePath = `src/content/notes/${note.id}.md`;
+const schema = {
+  '@context': 'https://schema.org', '@type': 'Article',
+  headline: note.data.title, description: note.data.description,
+  datePublished: note.data.date, dateModified: note.data.updated || note.data.date,
+  author: { '@type': 'Person', name: 'irideas', url: 'https://github.com/irideas' },
+  mainEntityOfPage: new URL(`/${note.id}/`, Astro.site).href,
+  keywords: note.data.tags,
+  ...(note.data.source && { citation: {
+    '@type': 'CreativeWork', name: note.data.source.title, url: note.data.source.url,
+    author: { '@type': 'Person', name: note.data.source.author },
+    datePublished: note.data.source.date,
+  } }),
+};
 ---
 <Base title={note.data.title} description={note.data.description} image={note.data.cover?.src} type="article">
   <article class="article-shell">
-    <header class="article-header"><a class="back-link" href={monthUrl(note.data.date.slice(0, 7))}>← {monthTitle(note.data.date.slice(0, 7))}的记录</a><div class="metadata"><time datetime={note.data.date}>{displayDate(note.data.date)}</time><span>约 {readingTime(note.body)} 分钟</span></div><h1>{note.data.title}</h1><p class="article-description">{note.data.description}</p>{note.data.tags.length > 0 && <div class="labels" aria-label="文章标签">{note.data.tags.map(tag => <a class="label" href={tagUrl(tag)}>{tag}</a>)}</div>}</header>
+    <header class="article-header">
+      <a class="back-link" href={monthUrl(note.data.date.slice(0, 7))}>← {monthTitle(note.data.date.slice(0, 7))}</a>
+      <div class="metadata"><span>发布 <time datetime={note.data.date}>{displayDate(note.data.date)}</time></span>{note.data.updated && note.data.updated !== note.data.date && <span>更新 <time datetime={note.data.updated}>{displayDate(note.data.updated)}</time></span>}{note.data.asOf && <span>资料截至 <time datetime={note.data.asOf}>{displayDate(note.data.asOf)}</time></span>}<span>约 {readingTime(note.body)} 分钟</span></div>
+      <h1>{note.data.title}</h1><p class="article-description">{note.data.description}</p>
+      {note.data.tags.length > 0 && <div class="labels" aria-label="领域关键词">{note.data.tags.map(tag => <a class="label" href={tagUrl(tag)}>{tag}</a>)}</div>}
+      {note.data.source && <div class="source-note"><span class="source-label">主要来源</span><a href={note.data.source.url}>{note.data.source.author}《{note.data.source.title}》</a><p>{note.data.source.publication}{note.data.source.date && <> · 原文发布于 <time datetime={note.data.source.date}>{displayDate(note.data.source.date)}</time></>}</p></div>}
+    </header>
     {note.data.cover && <figure class="article-cover"><Image src={note.data.cover} alt={note.data.coverAlt || ''} widths={[720, 1100, 1500]} sizes="(max-width: 800px) 100vw, 900px" width={1500} format="webp" loading="eager" />{note.data.coverCredit && <figcaption>{note.data.coverCredit}</figcaption>}</figure>}
+    {sections.length > 1 && <details class="article-toc" open><summary>文章目录</summary><nav aria-label="文章目录"><ol>{sections.map(section => <li><a href={`#${section.slug}`}>{section.text}</a></li>)}</ol></nav></details>}
     <div class="prose"><Content /></div>
-    <footer class="article-end"><span>这篇先记到这里。</span><a href="/">回到所有记录 ↗</a></footer>
+    <footer class="article-end">
+      <div><p>整理：irideas</p>{note.data.revision && <p class="revision-note">本次更新：{note.data.revision}</p>}</div>
+      <div class="article-links"><a href={`https://github.com/irideas/notes/blob/main/${sourcePath}`}>Markdown 原稿</a><a href={`https://github.com/irideas/notes/commits/main/${sourcePath}`}>修订记录</a><a href={`https://github.com/irideas/notes/issues/new?title=${encodeURIComponent(`更正建议：${note.data.title}`)}`}>更正建议</a><a href="/">全部文章 ↗</a></div>
+    </footer>
+    <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />
   </article>
 </Base>

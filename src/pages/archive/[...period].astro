@@ -5,4 +5,4 @@ import { allNotes, groupedMonths, monthTitle } from '../../lib/notes';
 export async function getStaticPaths() { return groupedMonths(await allNotes()).map(({ month, notes }) => ({ params: { period: month.replace('-', '/') }, props: { month, notes } })); }
 const { month, notes } = Astro.props;
 ---
-<Base title={monthTitle(month)}><div class="shell page-intro"><a class="back-link" href="/archive/">← 年月归档</a><h1>{monthTitle(month)}</h1><p class="page-description">这个月，记了 {notes.length} 篇。</p><div class="note-grid">{notes.map(note => <NoteCard note={note} />)}</div></div></Base>
+<Base title={monthTitle(month)}><div class="shell page-intro"><a class="back-link" href="/archive/">← 年月归档</a><h1>{monthTitle(month)}</h1><p class="page-description">本月首次发布 {notes.length} 篇文章。</p><div class="note-grid">{notes.map(note => <NoteCard note={note} />)}</div></div></Base>
