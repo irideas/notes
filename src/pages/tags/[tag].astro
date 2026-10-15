@@ -1,0 +1,8 @@
+---
+import Base from '../../layouts/Base.astro';
+import NoteCard from '../../components/NoteCard.astro';
+import { allNotes } from '../../lib/notes';
+export async function getStaticPaths() { const notes = await allNotes(); return [...new Set(notes.flatMap(note => note.data.tags))].map(tag => ({ params: { tag }, props: { tag, notes: notes.filter(note => note.data.tags.includes(tag)) } })); }
+const { tag, notes } = Astro.props;
+---
+<Base title={tag}><div class="shell page-intro"><a class="back-link" href="/">← 所有记录</a><span class="eyebrow">一个小标记</span><h1>{tag}</h1><p class="page-description">找到 {notes.length} 篇相关记录。</p><div class="note-grid">{notes.map(note => <NoteCard note={note} />)}</div></div></Base>

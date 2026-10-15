@@ -1,0 +1,57 @@
+---
+import '../styles/global.css';
+import { siteTitle, siteDescription } from '../lib/notes';
+interface Props { title?: string; description?: string; image?: string; type?: string; }
+const { title, description = siteDescription, image, type = 'website' } = Astro.props;
+const pageTitle = title ? `${title} · ${siteTitle}` : siteTitle;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const current = Astro.url.pathname;
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f7f8f3" />
+    <meta name="description" content={description} />
+    <title>{pageTitle}</title>
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={siteTitle} href="/rss.xml" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={siteTitle} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {image && <meta property="og:image" content={new URL(image, Astro.site)} />}
+    <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+    <script is:inline>
+      try { const t = localStorage.getItem('notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch {}
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到正文</a>
+    <header class="site-header shell">
+      <a class="brand" href="/" aria-label="记点儿东西，首页"><span class="brand-mark" aria-hidden="true">记</span><span>记点儿东西<span class="brand-en">NOTES BY IRIDEAS</span></span></a>
+      <nav aria-label="主导航">
+        <a href="/" aria-current={current === '/' ? 'page' : undefined}>记录</a>
+        <a href="/archive/" aria-current={current.startsWith('/archive') ? 'page' : undefined}>归档</a>
+        <a href="/about/" aria-current={current === '/about/' ? 'page' : undefined}>关于</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗主题" title="切换明暗主题" hidden>深色</button>
+      </nav>
+    </header>
+    <main id="main"><slot /></main>
+    <footer class="site-footer shell"><p>记下来，方便以后再看。</p><div><a href="/rss.xml">RSS</a><a href="https://github.com/irideas/notes" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></footer>
+    <script>
+      const button = document.getElementById('theme-toggle');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+      function dark() { return document.documentElement.dataset.theme ? document.documentElement.dataset.theme === 'dark' : prefersDark.matches; }
+      function label() { if (button) { button.textContent = dark() ? '浅色' : '深色'; button.setAttribute('aria-label', dark() ? '切换为浅色主题' : '切换为深色主题'); } }
+      if (button) { button.hidden = false; button.addEventListener('click', () => { const next = dark() ? 'light' : 'dark'; document.documentElement.dataset.theme = next; try { localStorage.setItem('notes-theme', next); } catch {} label(); }); }
+      prefersDark.addEventListener('change', label);
+      label();
+    </script>
+  </body>
+</html>
