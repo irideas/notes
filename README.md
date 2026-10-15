@@ -3,7 +3,7 @@
 理解事物如何运转。围绕具体问题整理概念、模型与证据，形成有依据、可修正的判断。
 
 - 网站：[notes.irideas.pro](https://notes.irideas.pro/)
-- 内容：简体中文与英文完整版本，Markdown 按首次发布日期的年月归档
+- 内容：简体中文与英文完整版本，Markdown 按文章路径年月归档
 - 技术：Astro 静态站点，Mermaid 在构建时生成 SVG
 - 发布：GitHub Actions → GitHub Pages
 
@@ -27,7 +27,7 @@ npm run dev
 | 贡献、更正与提交 | [贡献指南](CONTRIBUTING.md) |
 | 了解内容定位与质量要求 | [内容原则](docs/content/policy.md) |
 | 新增、修订文章或更换配图 | [写作指南](docs/content/authoring.md) |
-| 元信息、时间、OKF 与 Raw 原稿 | [文章格式](docs/content/format.md) |
+| 元信息、时间、OKF 与 GitHub 原稿 | [文章格式](docs/content/format.md) |
 | 开发网站、预览与检查 | [开发指南](docs/development/guide.md) |
 | 发布、线上核验与恢复 | [发布指南](docs/operations/deployment.md) |
 | 文章评论与双语共用讨论 | [讨论指南](docs/operations/discussions.md) |

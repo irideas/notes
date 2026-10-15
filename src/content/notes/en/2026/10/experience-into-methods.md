@@ -1,26 +1,18 @@
 ---
 type: Article
 title: 'Cogware: How Organizational Capability Accumulates and Evolves'
-language: en
-date: '2026-10-15'
-first_recorded_at: '2026-10-15T16:19:47+08:00'
-first_recorded_commit: af280d48faedbb75636e3f18d2f9a2cced81c05d
-generated:
-  by: codex/unknown-version
-  at: '2026-10-15T18:21:43+08:00'
 description: How skills, guardrails and memory help organizations retain methods, prevent critical errors and improve through practice, with applications to business operations, software engineering and AI collaboration.
 tags:
 - 组织学习
 - 知识管理
-primary_source: wan-cogware
+generated:
+  by: codex/unknown-version
+  at: '2026-10-15T18:33:51+08:00'
 sources:
 - id: wan-cogware
   resource: https://www.dedao.cn/course/article?id=Qe6EGjvO7zRKZqoM76XnDrkMLPgAp9
-  title: 'Processes, Checklists and Experience Repositories: Externalizing Intelligence into Systems'
+  title: 'Wan Weigang · Processes, Checklists and Experience Repositories: Externalizing Intelligence into Systems'
   author: human:wan-weigang
-  author_name: Wan Weigang
-  publication: 'Dedao · Wan Weigang: 100 Lessons in Modern Thinking Tools'
-  published_on: '2026-07-09'
 - id: surgery
   resource: https://pubmed.ncbi.nlm.nih.gov/19144931/
   title: 'Haynes et al. (2009): Surgical safety checklist study'
@@ -63,11 +55,9 @@ sources:
 - id: anthropic-harness
   resource: https://www.anthropic.com/engineering/harness-design-long-running-apps
   title: 'Anthropic: Harness design for long-running application development'
-revision: Refines the legacy-pagination example and verification criteria, adds concise harness cases from OpenAI and Anthropic, and records timezone-aware metadata and source provenance.
-cover: ../../../2026/10/experience-into-methods.png
-coverAlt: Editorial illustration of drafting a method, checking quality with a measuring tool, and archiving experience, linked by an ascending feedback path.
-coverCredit: AI-generated illustration
 ---
+
+![Editorial illustration of drafting a method, checking quality with a measuring tool, and archiving experience, linked by an ascending feedback path.](../../../2026/10/experience-into-methods.png "AI-generated illustration")
 
 > This article follows the source's explanatory order: define Cogware as a whole, explain skills, guardrails and memory, examine their feedback loop, and then connect the model to business operations, software engineering and AI collaboration.
 >
@@ -397,7 +387,7 @@ The source's central value is to focus attention on how organizational capabilit
 
 The primary source supplies the organizational argument; research clarifies its concepts, and engineering sources support the explicitly identified extensions. Source links and their uses are listed below. External materials were checked on October 15, 2026.
 
-[^wan-cogware]: Primary source. The article preserves its sequence of whole, components, feedback loop and organizational application. Development and AI cases are identified extensions.
+[^wan-cogware]: Dedao · Wan Weigang: 100 Lessons in Modern Thinking Tools, 2026-07-09. Primary source. The article preserves its sequence of whole, components, feedback loop and organizational application. Development and AI cases are identified extensions.
 [^surgery]: Checks study scope, before-and-after figures and association-based wording; it does not establish the cognitive mechanism of the intervention.
 [^offloading]: Clarifies cognitive offloading as one possible way to explain a checklist's role.
 [^stickiness]: Clarifies obstacles and conditions for transferring experience within firms.

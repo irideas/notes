@@ -3,8 +3,8 @@ import Base from '../layouts/Base.astro';
 import NoteCard from './NoteCard.astro';
 import { domains } from '../lib/domains';
 import { ui, homeUrl, articleCount, type Locale } from '../lib/i18n';
-import type { CollectionEntry } from 'astro:content';
-interface Props { locale: Locale; tag: keyof typeof domains; notes: CollectionEntry<'notes'>[]; }
+import type { Note } from '../lib/notes';
+interface Props { locale: Locale; tag: keyof typeof domains; notes: Note[]; }
 const { locale, tag, notes } = Astro.props;
 const t = ui(locale);
 const domain = domains[tag];

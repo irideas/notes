@@ -25,18 +25,10 @@ export const formatInstant = (instant, language = 'zh-CN') => new Intl.DateTimeF
   timeZone: displayTimeZone, year: 'numeric', month: '2-digit', day: '2-digit',
   hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
 }).format(new Date(instant));
-export const rawUrl = id => `/raw/${id}.md`;
-export const primarySource = data => data.sources?.find(source => source.id === data.primary_source);
+export const rawUrl = id => `https://raw.githubusercontent.com/irideas/notes/main/src/content/notes/${id}.md`;
+export const primarySource = data => data.sources?.[0];
 export const isActor = value => typeof value === 'string' && /^(?:human:[^\s]+|process:[^\s]+|[^\s:/]+\/[^\s/]+)$/.test(value);
-
 export function metadataErrors(data) {
-  const errors = [];
-  if (!!data.created_at === !!data.first_recorded_at) errors.push('Provide exactly one of created_at or first_recorded_at; do not infer creation from Git');
-  if (!!data.first_recorded_at !== !!data.first_recorded_commit) errors.push('first_recorded_at requires its full first_recorded_commit evidence');
-  if (isInstant(data.created_at) && isInstant(data.generated?.at) && Date.parse(data.created_at) > Date.parse(data.generated.at)) errors.push('Content modification precedes known creation');
-  if (data.revision && !data.generated) errors.push('A revision requires generated.by and generated.at');
   const sources = data.sources || [];
-  if (new Set(sources.map(source => source.id)).size !== sources.length) errors.push('Source IDs must be unique');
-  if (data.primary_source && !primarySource(data)) errors.push('primary_source must reference an existing sources[].id');
-  return errors;
+  return new Set(sources.map(source => source.id)).size === sources.length ? [] : ['Source IDs must be unique'];
 }

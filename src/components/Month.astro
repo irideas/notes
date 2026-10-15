@@ -3,8 +3,8 @@ import Base from '../layouts/Base.astro';
 import NoteCard from './NoteCard.astro';
 import { monthTitle } from '../lib/notes';
 import { ui, prefix, articleCount, type Locale } from '../lib/i18n';
-import type { CollectionEntry } from 'astro:content';
-interface Props { locale: Locale; month: string; notes: CollectionEntry<'notes'>[]; }
+import type { Note } from '../lib/notes';
+interface Props { locale: Locale; month: string; notes: Note[]; }
 const { locale, month, notes } = Astro.props;
 const t = ui(locale);
 ---

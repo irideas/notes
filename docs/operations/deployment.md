@@ -42,7 +42,7 @@ gh run list --repo irideas/notes --workflow deploy.yml --limit 5 --json database
 
 1. 本地自动检查和相关人工检查通过。
 2. 对应提交的检查与部署工作流成功；记录提交 SHA 和运行地址。
-3. 打开实际变更的中英文线上页面，确认新增文案、封面或行为，以及相应资源是当前版本；文章改动额外核对同语言 Raw 与 `/raw/index.md`，`/raw/build.json` 的 SHA 必须对应本次提交、dirty 必须为 false，语言切换保持页面对应关系。构建成功或 HTTP 200 单独都不足以证明本次变更已经上线。
+3. 打开实际变更的中英文线上页面，确认新增文案、封面或行为，以及相应资源是当前版本；文章改动额外核对同语言 GitHub Raw 链接及其实际原稿，语言切换保持页面对应关系。构建成功或 HTTP 200 单独都不足以证明本次变更已经上线。
 
 可以用 `curl -fsSI https://notes.irideas.pro/` 辅助检查响应；必要时请求 `Cache-Control: no-cache`，再核对内容或资源地址。保留正常 TLS 验证。界面变化保存合适截图，交付时给出网站地址、变更摘要、检查结果和任何尚未验证的部分。
 

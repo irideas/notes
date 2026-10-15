@@ -1,26 +1,18 @@
 ---
 type: Article
 title: 智件：组织能力如何积累与演进
-language: zh-CN
-date: '2026-10-15'
-first_recorded_at: '2026-10-15T12:18:22+08:00'
-first_recorded_commit: e52f58755ff9dd013503f534e5f9579aacabbffa
-generated:
-  by: codex/unknown-version
-  at: '2026-10-15T18:21:43+08:00'
 description: 从技能、护栏与记忆出发，解释组织如何保存做事方法、控制关键错误，并用实践结果持续改进；结合企业经营、软件工程与 AI 协作展开。
 tags:
 - 组织学习
 - 知识管理
-primary_source: wan-cogware
+generated:
+  by: codex/unknown-version
+  at: '2026-10-15T18:33:51+08:00'
 sources:
 - id: wan-cogware
   resource: https://www.dedao.cn/course/article?id=Qe6EGjvO7zRKZqoM76XnDrkMLPgAp9
-  title: 流程、清单和经验库：把聪明外置成系统
+  title: 万维钢 · 流程、清单和经验库：把聪明外置成系统
   author: human:wan-weigang
-  author_name: 万维钢
-  publication: 得到 · 万维钢·现代思维工具100讲
-  published_on: '2026-07-09'
 - id: surgery
   resource: https://pubmed.ncbi.nlm.nih.gov/19144931/
   title: Haynes 等（2009）：手术安全清单研究
@@ -63,11 +55,9 @@ sources:
 - id: anthropic-harness
   resource: https://www.anthropic.com/engineering/harness-design-long-running-apps
   title: Anthropic：长期应用开发的 Harness 设计
-revision: 明确旧接口分页的兼容场景与验证条件，加入 OpenAI、Anthropic 的 Harness 实践，补齐带时区的元信息及来源关联。
-cover: ./experience-into-methods.png
-coverAlt: 淡彩插画：绘制方法蓝图、通过量具核查质量、归档经验记录的三个工作场景，由向上回环的路径连接。
-coverCredit: AI 生成插画
 ---
+
+![淡彩插画：绘制方法蓝图、通过量具核查质量、归档经验记录的三个工作场景，由向上回环的路径连接。](./experience-into-methods.png "AI 生成插画")
 
 > 本文沿用原文的解释层次：先定义智件，再理解技能、护栏和记忆，随后解释三者如何形成闭环，最后联系组织经营、软件工程与 AI 协作。[^wan-cogware]
 >
@@ -397,7 +387,7 @@ Anthropic 的实践还提示：模型能力和任务条件变化后，应重新�
 
 主要来源提供组织能力的论证；研究资料用于校准相关概念，工程资料支持明确标出的延伸。以下列出来源链接及用途。外部材料核验日期为 2026 年 10 月 15 日。
 
-[^wan-cogware]: 主要来源。本文保留其整体、组成、闭环与组织应用的解释顺序；开发案例与 AI 工程案例为分别说明的延伸。
+[^wan-cogware]: 得到 · 万维钢·现代思维工具100讲，2026-07-09。主要来源。本文保留其整体、组成、闭环与组织应用的解释顺序；开发案例与 AI 工程案例为分别说明的延伸。
 [^surgery]: 核对研究范围、实施前后数字与“相关联”的表述，不将其当作认知机制的因果证明。
 [^offloading]: 校准认知卸载的定义，用于解释清单的一项可能作用。
 [^stickiness]: 校准企业内部经验迁移的阻力与适用条件。

@@ -21,7 +21,7 @@
 
 ## 发布范围
 
-`src/content/notes/` 内的所有 Markdown 都属于待发布内容，没有草稿或未来日期过滤。模板位于 [docs/templates/article.md](docs/templates/article.md)，未完成稿应保留在集合之外。集合之外的文件不会进入文章页面，但提交到本公开仓库的文件仍可被他人阅读。
+`src/content/notes/` 内的所有 Markdown 都属于待发布内容，没有草稿或定时发布过滤。模板位于 [docs/templates/article.md](docs/templates/article.md)，未完成稿应保留在集合之外。集合之外的文件不会进入文章页面，但提交到本公开仓库的文件仍可被他人阅读。
 
 自动检查验证结构与产物，来源可靠性、论证和图像表达仍需编辑判断。实际检查与失败处理见对应指南。
 

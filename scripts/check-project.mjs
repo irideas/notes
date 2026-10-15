@@ -6,8 +6,8 @@ import { parse, parseFragment } from 'parse5';
 import GithubSlugger from 'github-slugger';
 import config from '../astro.config.mjs';
 import { discussionConfig, discussionFor, validateDiscussions } from '../src/lib/discussions.mjs';
-import { parseDocument } from '../src/lib/raw-bundle.mjs';
-import { checkRaw } from './check-raw.mjs';
+import { parseDocument, coverFromBody } from '../src/lib/article-source.mjs';
+import { checkArticles } from './check-articles.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = resolve(root, 'dist');
@@ -154,13 +154,11 @@ for (const [file,doc] of markdown) {
     const match = path.match(/^(en\/)?(\d{4})\/(\d{2})\/([a-z0-9]+(?:-[a-z0-9]+)*)\.md$/);
     if (!match) report(file,'Expected [en/]YYYY/MM/lowercase-slug.md');
     else {
-      if (`${match[2]}-${match[3]}` !== doc.data.date?.slice(0,7)) report(file,'Directory month differs from first publication date');
       const key = `${match[2]}/${match[3]}/${match[4]}`;
       const pair = pairs.get(key) || {};
       pair[match[1] ? 'en' : 'zh-CN'] = {file,doc}; pairs.set(key,pair);
     }
     if (doc.h1) report(file,'Article body must start below H1');
-    if (doc.data.language !== (path.startsWith('en/') ? 'en' : 'zh-CN')) report(file,'Frontmatter language differs from article path');
     const sources = new Set((doc.data.sources || []).map(source => source.id));
     for (const id of doc.references) {
       if (!doc.footnotes.has(id)) report(file,`Missing footnote definition: ${id}`);
@@ -189,12 +187,12 @@ for (const [file,doc] of markdown) {
 for (const [key,pair] of pairs) {
   if (!pair.en || !pair['zh-CN']) { report(noteRoot,`Missing language counterpart for ${key}`); continue; }
   const a = pair['zh-CN']; const b = pair.en;
-  for (const field of ['date','asOf','primary_source']) if (a.doc.data[field] !== b.doc.data[field]) report(b.file,`Paired ${field} differs`);
-  const sourceIdentity = doc => (doc.data.sources || []).map(({id,resource,published_on}) => ({id,resource,published_on})).sort((a,b) => a.id.localeCompare(b.id));
+  const sourceIdentity = doc => (doc.data.sources || []).map(({id,resource}) => ({id,resource})).sort((a,b) => a.id.localeCompare(b.id));
   if (JSON.stringify(sourceIdentity(a.doc)) !== JSON.stringify(sourceIdentity(b.doc))) report(b.file,'Paired source IDs, resources or publication dates differ');
   if (JSON.stringify(a.doc.data.tags || []) !== JSON.stringify(b.doc.data.tags || [])) report(b.file,'Paired domain keys differ');
-  const cover = item => item.doc.data.cover ? resolve(dirname(item.file),item.doc.data.cover) : null;
-  if (cover(a) !== cover(b)) report(b.file,'Language editions must share the same cover asset');
+  const cover = async item => { const image = await coverFromBody(item.doc.body); return image ? resolve(dirname(item.file),image.path) : null; };
+  if (await cover(a) !== await cover(b)) report(b.file,'Language editions must share the same cover asset');
+  if (a.doc.data.sources?.[0]?.id !== b.doc.data.sources?.[0]?.id) report(b.file,'Language editions must keep the same primary source first');
   if (JSON.stringify(a.doc.structure) !== JSON.stringify(b.doc.structure)) report(b.file,'Headings, tables or diagram counts differ between editions');
 }
 for (const error of validateDiscussions(new Set(pairs.keys()))) report(resolve(root,'src/data/discussions.json'), error);
@@ -230,8 +228,8 @@ for (const pathname of ['rss.xml','en/rss.xml','sitemap.xml']) {
     for (const match of source.matchAll(/<item>[\s\S]*?<link>([^<]+)<\/link>/g)) if (new URL(match[1]).pathname.startsWith('/en/') !== english) report(file,'Mixed languages in feed');
   }
 }
-await checkRaw({root,dist,noteRoot,markdown,pages,report});
+await checkArticles({root,dist,noteRoot,markdown,pages,report});
 if (errors.length) {
   console.error(`Project checks failed (${errors.length}):\n${errors.map(e => `- ${e}`).join('\n')}`);
   process.exitCode = 1;
-} else console.log(`Project checks passed: ${markdown.size} Markdown files, ${pages.size} pages, ${pairs.size} bilingual article pair(s), OKF/raw parity, timezone metadata, citations, feeds, assets and anchors.`);
+} else console.log(`Project checks passed: ${markdown.size} Markdown files, ${pages.size} pages, ${pairs.size} bilingual article pair(s), standard OKF fields, GitHub Raw links, timezone metadata, citations, feeds, assets and anchors.`);

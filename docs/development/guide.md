@@ -12,7 +12,7 @@ Node.js 默认版本在 [.nvmrc](../../.nvmrc)，最低兼容约束在 [package.
 |---|---|
 | `npm run dev` | 本地开发，打开输出的 Local 地址 |
 | `npm run dev:stop` | 停止本仓库的开发服务 |
-| `npm run build` | 同批生成阅读页与 `dist/raw/`，强制刷新内容缓存 |
+| `npm run build` | 生成静态阅读页，强制刷新内容缓存 |
 | `npm run preview` | 预览上一次构建产物，不自动重新构建 |
 | `npm run preview:stop` | 停止本仓库的预览服务 |
 | `npm run check` | 重新构建一次，再检查文档与生成产物 |
@@ -28,8 +28,8 @@ Node.js 默认版本在 [.nvmrc](../../.nvmrc)，最低兼容约束在 [package.
 | 中文文章与共享封面 | `src/content/notes/YYYY/MM/` |
 | 对应英文文章 | `src/content/notes/en/YYYY/MM/` |
 | 语言、界面文案与配对路由 | `src/lib/i18n.ts` |
-| 元信息类型与共用时间约束 | `src/content.config.ts`、`src/lib/content-metadata.mjs` |
-| Raw 知识包、索引、图片与构建版本 | `src/lib/raw-bundle.mjs` |
+| 标准元信息与共用时间约束 | `src/content.config.ts`、`src/lib/content-metadata.mjs` |
+| 源文档解析、Markdown 封面与 Git 创建记录 | `src/lib/article-source.mjs` |
 | 来源脚注的链接与界面语言 | `src/lib/source-footnotes.mjs` |
 | 领域词、中英文定义和范围 | `src/lib/domains.ts` |
 | 列表语言过滤、排序、URL 与日期工具 | `src/lib/notes.ts` |
@@ -44,7 +44,7 @@ Node.js 默认版本在 [.nvmrc](../../.nvmrc)，最低兼容约束在 [package.
 | RSS 与 sitemap | `src/pages/rss.xml.js`、`src/pages/sitemap.xml.ts` |
 | 图标与爬虫配置 | `public/` |
 | 本地及 CI 命令 | `package.json` 的 scripts |
-| 检查实现 | `scripts/check-project.mjs`、`scripts/check-raw.mjs`、`scripts/check-metadata.test.mjs` |
+| 检查实现 | `scripts/check-project.mjs`、`scripts/check-articles.mjs`、`scripts/check-metadata.test.mjs` |
 | PR 检查和生产发布 | `.github/workflows/check.yml`、`deploy.yml` |
 
 `docs/` 是项目文档，不作为站点文章发布。`node_modules/`、`.astro/` 和 `dist/` 是生成内容，不提交。字段、领域词、命令实现与部署行为各维护一个来源；指南解释其含义，不另抄完整登记表。
@@ -53,12 +53,12 @@ Node.js 默认版本在 [.nvmrc](../../.nvmrc)，最低兼容约束在 [package.
 
 运行 `npm run check`。命令退出码为 0 才算自动检查通过；错误会指出文件和问题。它先运行时间、身份与元信息语义的回归测试，再执行以下检查：
 
-1. Astro 构建：按 schema 验证字段、真实日期、领域词、图片引用与带时区的修改与创建/首次记录字段；图表语法错误使构建失败。
-2. 源文档：文章目录年月与首次发布日期一致；正文不重复一级标题；根入口、项目文档和文章的本地文件链接及 Markdown 片段可解析。代码示例中的链接不参与扫描。
+1. Astro 构建：按 schema 验证字段、真实日期、领域词、图片引用与带时区的修改时间；图表语法错误使构建失败。
+2. 源文档：文章目录采用归档年月；正文不重复一级标题；根入口、项目文档和文章的本地文件链接及 Markdown 片段可解析。代码示例中的链接不参与扫描。
 3. 生成页面：内部链接、锚点、图片、脚本、样式存在；每页一个一级标题，ID 唯一，SEO 元信息、语言属性与互相对应的 hreflang 存在，规范地址指向本页，SVG 片段引用有效；无未渲染 Mermaid 代码或公开 DIKW 框架术语。
-4. 双语：每篇有中英两版，首次发布日期、来源 ID/URL/日期、领域词和封面对应，实际编辑时刻独立记录，主要标题、表格与图表数量一致。
+4. 双语：每篇有中英两版，来源 ID/URL、首项主要来源、领域词和封面对应，实际编辑时刻独立记录，主要标题、表格与图表数量一致。
 5. RSS 和 sitemap：产物存在，其列出的本站页面可找到，两个订阅源不混入另一语言文章。
-6. OKF/Raw：源 Markdown 与原稿制品逐字节相同；索引符合保留文件规则，图片和本地链接存在且不越界；脚注与来源对应；HTML 时间、JSON-LD、原稿发现链接及固定提交链接与元信息一致。
+6. OKF 与原稿：只使用标准字段，来源脚注对应；Markdown 封面只渲染一次；GitHub Raw 地址和发现链接指向当前语言原稿，页面时间与 JSON-LD 对应，不生成本站原稿或提交链接。
 7. 评论：每个文章对恰有一个登记编号，无跨文章重复编号或多余登记；两语产物加载同一讨论，界面语言、浅色主题、延迟加载和 GitHub 直达链接正确。远端实际存在性另由 `npm run discussion:check` 核验。
 
 它不联网逐条探测外链，也不证明来源真实、论证成立或画面正确。来源核验由 [内容原则](../content/policy.md) 与编辑审核负责。
