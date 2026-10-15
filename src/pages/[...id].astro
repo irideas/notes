@@ -32,12 +32,47 @@ const schema = {
       {note.data.source && <div class="source-note"><span class="source-label">主要来源</span><a href={note.data.source.url}>{note.data.source.author}《{note.data.source.title}》</a><p>{note.data.source.publication}{note.data.source.date && <> · 原文发布于 <time datetime={note.data.source.date}>{displayDate(note.data.source.date)}</time></>}</p></div>}
     </header>
     {note.data.cover && <figure class="article-cover"><Image src={note.data.cover} alt={note.data.coverAlt || ''} widths={[720, 1100, 1500]} sizes="(max-width: 800px) 100vw, 900px" width={1500} format="webp" loading="eager" />{note.data.coverCredit && <figcaption>{note.data.coverCredit}</figcaption>}</figure>}
-    {sections.length > 1 && <details class="article-toc" open><summary>文章目录</summary><nav aria-label="文章目录"><ol>{sections.map(section => <li><a href={`#${section.slug}`}>{section.text}</a></li>)}</ol></nav></details>}
-    <div class="prose"><Content /></div>
-    <footer class="article-end">
-      <div><p>整理：irideas</p>{note.data.revision && <p class="revision-note">本次更新：{note.data.revision}</p>}</div>
-      <div class="article-links"><a href={`https://github.com/irideas/notes/blob/main/${sourcePath}`}>Markdown 原稿</a><a href={`https://github.com/irideas/notes/commits/main/${sourcePath}`}>修订记录</a><a href={`https://github.com/irideas/notes/issues/new?title=${encodeURIComponent(`更正建议：${note.data.title}`)}`}>更正建议</a><a href="/">全部文章 ↗</a></div>
-    </footer>
+    <div class:list={['article-reading', { 'has-toc': sections.length > 1 }]}>
+      {sections.length > 1 && <aside class="article-sidebar"><details class="article-toc" open><summary>文章目录</summary><nav aria-label="文章目录"><ol>{sections.map(section => <li><a href={`#${section.slug}`}>{section.text}</a></li>)}</ol></nav></details></aside>}
+      <div class="article-main">
+        <div class="prose"><Content /></div>
+        <footer class="article-end">
+          <div><p>整理：irideas</p>{note.data.revision && <p class="revision-note">本次更新：{note.data.revision}</p>}</div>
+          <div class="article-links"><a href={`https://github.com/irideas/notes/blob/main/${sourcePath}`}>Markdown 原稿</a><a href={`https://github.com/irideas/notes/commits/main/${sourcePath}`}>修订记录</a><a href={`https://github.com/irideas/notes/issues/new?title=${encodeURIComponent(`更正建议：${note.data.title}`)}`}>更正建议</a><a href="/">全部文章 ↗</a></div>
+        </footer>
+      </div>
+    </div>
     <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />
   </article>
 </Base>
+<script>
+  const toc = document.querySelector<HTMLDetailsElement>('.article-toc');
+  if (toc) {
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    const arrangeToc = () => { toc.open = desktop.matches; };
+    arrangeToc();
+    desktop.addEventListener('change', arrangeToc);
+
+    const links = [...toc.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')];
+    const sections = links.map(link => ({ link, heading: document.getElementById(decodeURIComponent(link.hash.slice(1))) }));
+    let scheduled = false;
+    const updateCurrentSection = () => {
+      let current: HTMLAnchorElement | undefined;
+      for (const { link, heading } of sections) {
+        if (heading && heading.getBoundingClientRect().top <= 160) current = link;
+      }
+      for (const link of links) {
+        if (link === current) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      }
+      scheduled = false;
+    };
+    window.addEventListener('scroll', () => {
+      if (!scheduled) {
+        scheduled = true;
+        window.requestAnimationFrame(updateCurrentSection);
+      }
+    }, { passive: true });
+    updateCurrentSection();
+  }
+</script>

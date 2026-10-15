@@ -8,12 +8,12 @@ const months = groupedMonths(notes);
 ---
 <Base image={latest?.data.cover?.src}>
   <div class="shell">
-    <section class="home-intro" aria-labelledby="home-title"><div><span class="eyebrow">解释与分析</span><h1 id="home-title">理解事物<br />如何运转<span class="title-dot">。</span></h1></div><p>梳理概念与模型，分析机制与变化。<br />形成有依据、可修正的判断。</p></section>
+    <section class="home-intro" aria-labelledby="home-title"><div><span class="eyebrow">解释与分析</span><h1 id="home-title">理解事物<span class="title-line">如何运转<span class="title-dot">。</span></span></h1></div><p>梳理概念与模型，分析机制与变化。<br />形成有依据、可修正的判断。</p></section>
     <section aria-labelledby="latest-title"><div class="section-heading"><h2 id="latest-title">最新文章</h2><a href="/archive/">全部文章 <span aria-hidden="true">↗</span></a></div>
       {latest ? <NoteCard note={latest} featured /> : <p class="empty-state">暂无文章。</p>}
       {rest.length > 0 && <div class="note-grid">{rest.map(note => <NoteCard note={note} />)}</div>}
     </section>
-    <section class="months-section" aria-labelledby="months-title"><div class="section-heading"><h2 id="months-title">按月归档</h2><span class="subtle">按首次发布日期归档</span></div><div class="month-grid">{months.map(({ month, notes }) => <a class="month-link" href={monthUrl(month)}><span class="month-number">{month.slice(5)}</span><span><strong>{monthTitle(month)}</strong><small>{notes.length} 篇文章</small></span><span class="month-arrow" aria-hidden="true">↗</span></a>)}</div></section>
+    <section class="months-section" aria-labelledby="months-title"><div class="section-heading"><h2 id="months-title">按月归档</h2><span class="subtle">按首次发布日期归档</span></div><ol class="month-list">{months.map(({ month, notes }) => <li><a class="month-link" href={monthUrl(month)}><strong>{monthTitle(month)}</strong><span class="month-count">{notes.length} 篇文章</span><span class="month-arrow" aria-hidden="true">↗</span></a></li>)}</ol></section>
     <aside class="home-aside"><p>关注系统、组织与人类活动。<br />从具体问题出发，连接认识与实践。</p><a href="/about/">关于本站 ↗</a></aside>
   </div>
 </Base>
