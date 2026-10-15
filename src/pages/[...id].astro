@@ -2,6 +2,7 @@
 import { render } from 'astro:content';
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import Comments from '../components/Comments.astro';
 import { localeOf, ui, homeUrl } from '../lib/i18n';
 import { domains } from '../lib/domains';
 import { allNotes, displayDate, monthTitle, monthUrl, readingTime, tagUrl } from '../lib/notes';
@@ -45,6 +46,7 @@ const schema = {
           <div><p>{t.compiled}</p>{note.data.revision && <p class="revision-note">{t.revision} {note.data.revision}</p>}</div>
           <div class="article-links"><a href={`https://github.com/irideas/notes/blob/main/${sourcePath}`}>{t.markdown}</a><a href={`https://github.com/irideas/notes/commits/main/${sourcePath}`}>{t.history}</a><a href={`https://github.com/irideas/notes/issues/new?template=content-correction.yml&title=${encodeURIComponent(`${t.correctionTitle}${note.data.title}`)}`}>{t.correction}</a><a href={homeUrl(locale)}>{t.allArticles} ↗</a></div>
         </footer>
+        <Comments id={note.id} locale={locale} />
       </div>
     </div>
     <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />

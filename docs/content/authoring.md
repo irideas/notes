@@ -8,7 +8,8 @@
 2. 从 [中文模板](../templates/article.md) 和 [英文模板](../templates/article.en.md) 复制起稿，在内容集合之外完成材料核验和正文。模板中的占位内容必须替换。
 3. 准备发布的文章放在 `src/content/notes/YYYY/MM/slug.md`；年月与本站首次发布日期一致，slug 使用简短的小写英文和连字符。
 4. 按下表补齐元信息和所需配图。正文从二级标题开始，主题结构按问题本身组织。
-5. 运行 `npm run check`，预览正文、目录、图表及封面，再按 [贡献流程](../../CONTRIBUTING.md) 交付。
+5. 两语定稿且发布已获授权后，按 [讨论指南](../operations/discussions.md) 创建或复用共用讨论，登记真实编号。草稿留在集合外，不为预览建帖。
+6. 运行 `npm run check`，预览正文、目录、图表、封面及双语评论区；发布前运行 `npm run discussion:check`，再按 [贡献流程](../../CONTRIBUTING.md) 交付。
 
 路径生成文章 URL，例如 `src/content/notes/2026/10/example.md` 对应 `/2026/10/example/`。发布后即使改题目，也保留原路径与首次发布日期。
 

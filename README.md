@@ -29,9 +29,10 @@ npm run dev
 | 新增、修订文章或更换配图 | [写作指南](docs/content/authoring.md) |
 | 开发网站、预览与检查 | [开发指南](docs/development/guide.md) |
 | 发布、线上核验与恢复 | [发布指南](docs/operations/deployment.md) |
+| 文章评论与双语共用讨论 | [讨论指南](docs/operations/discussions.md) |
 
 ## 维护与使用
 
-由 [irideas](https://github.com/irideas) 维护。通过 [Issues](https://github.com/irideas/notes/issues) 提交更正与补充依据，可通过 [RSS](https://notes.irideas.pro/rss.xml) 订阅更新。
+由 [irideas](https://github.com/irideas) 维护。文章末尾可参与 [Discussions](https://github.com/irideas/notes/discussions)，通过 [Issues](https://github.com/irideas/notes/issues) 提交需跟踪的更正；可通过 [RSS](https://notes.irideas.pro/rss.xml) 订阅更新。
 
 文章和配图未统一授予开放内容许可；转载或复用请联系维护者，并尊重各篇原始来源。依赖包遵循各自许可。

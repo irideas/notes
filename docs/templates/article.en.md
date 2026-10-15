@@ -9,6 +9,7 @@ tags: []
 Read ../content/authoring.md and ../content/policy.md. Use the same YYYY/MM/slug as the Chinese edition, under en/.
 Use English terms without Chinese annotations. Start the body below H1; organize it around the subject's own dependencies.
 Translate the complete article, tables, diagrams and source uses. Add applicable source, cover and revision fields.
+Follow ../operations/discussions.md to register one shared discussion for both editions; do not add its number to frontmatter.
 -->
 
 Write the complete explanation or analysis here.

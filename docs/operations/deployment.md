@@ -21,6 +21,8 @@ npm run check
 
 完成 [开发指南中的人工检查](../development/guide.md#检查与通过条件)。只暂存本次任务文件，提交具体问题和结果；按授权合入或推送 `main`。不要提交 `dist/`，工作流会生成产物。
 
+新增文章前按 [讨论指南](discussions.md) 准备两语共用讨论；涉及文章或讨论配置的发布额外运行 `npm run discussion:check` 只读核验远端。普通构建及 CI 不创建讨论。
+
 自动化分工：
 
 - [check.yml](../../.github/workflows/check.yml)：PR 检查，也可被发布流程复用；安装依赖并执行 `npm run check`。

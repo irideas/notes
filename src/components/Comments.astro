@@ -1,0 +1,41 @@
+---
+import { discussionConfig, discussionFor } from '../lib/discussions.mjs';
+import { ui, type Locale } from '../lib/i18n';
+interface Props { id: string; locale: Locale }
+const { id, locale } = Astro.props;
+const t = ui(locale);
+const discussion = discussionFor(id);
+---
+<section class="article-comments" aria-labelledby="discussion-heading" data-article-key={discussion.key}>
+  <div class="comments-heading">
+    <h2 id="discussion-heading">{t.discussion}</h2>
+    <a href={discussion.url}>{t.discussionLink} ↗</a>
+  </div>
+  <p class="comments-intro">{t.discussionIntro}</p>
+  <div class="giscus"></div>
+  <script is:inline src="https://giscus.app/client.js"
+    data-repo={discussionConfig.repository}
+    data-repo-id={discussionConfig.repositoryId}
+    data-category={discussionConfig.category}
+    data-category-id={discussionConfig.categoryId}
+    data-mapping="number"
+    data-term={String(discussion.number)}
+    data-reactions-enabled="0"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="light"
+    data-lang={locale}
+    data-loading="lazy"
+    crossorigin="anonymous" async></script>
+  <noscript><p>{t.discussionNoScript} <a href={discussion.url}>{t.discussionLink} ↗</a></p></noscript>
+</section>
+
+<style>
+  .article-comments{width:min(720px,100%);margin:38px auto 0;padding-top:28px;border-top:1px solid var(--line)}
+  .comments-heading{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:10px 20px}
+  h2{font-size:21px;font-weight:600}
+  a{font-size:12px;color:var(--green)}
+  .comments-intro{font-size:13px;color:var(--muted);line-height:1.9;margin:10px 0 22px}
+  .giscus{min-height:180px}
+  noscript p{color:var(--muted);font-size:13px}
+</style>

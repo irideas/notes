@@ -5,6 +5,7 @@
 ## 选择入口
 
 - 内容问题：提交 [Issue](https://github.com/irideas/notes/issues)，提供文章地址、具体段落、问题及可核验依据。
+- 交流解释、补充证据与实践：使用文章末尾的共用讨论，流程见 [讨论指南](docs/operations/discussions.md)。
 - 新增或修订文章：阅读 [内容原则](docs/content/policy.md) 和 [写作指南](docs/content/authoring.md)。
 - 页面或工程变更：阅读 [开发指南](docs/development/guide.md)。
 - 发布或恢复网站：阅读 [发布指南](docs/operations/deployment.md)。

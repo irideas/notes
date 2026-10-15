@@ -8,6 +8,8 @@
     "build": "astro build --force",
     "preview": "astro preview --host 127.0.0.1",
     "check": "npm run build && node scripts/check-project.mjs",
+    "discussion:ensure": "node scripts/discussions.mjs ensure",
+    "discussion:check": "node scripts/discussions.mjs check",
     "dev:stop": "astro dev stop",
     "preview:stop": "astro preview stop"
   },

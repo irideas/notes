@@ -16,6 +16,8 @@ Node.js 默认版本在 [.nvmrc](../../.nvmrc)，最低兼容约束在 [package.
 | `npm run preview` | 预览上一次构建产物，不自动重新构建 |
 | `npm run preview:stop` | 停止本仓库的预览服务 |
 | `npm run check` | 重新构建一次，再检查文档与生成产物 |
+| `npm run discussion:ensure -- KEY` | 查询文章讨论；显式 `--create` 才创建或恢复登记，见 [讨论指南](../operations/discussions.md) |
+| `npm run discussion:check` | 发布前只读核验远端讨论，需 GitHub CLI |
 
 端口被占用时，可使用 `npm run dev -- --port 4322`。服务可能在后台继续运行，即使命令已经退出；任务结束时停止自己启动的服务，保留他人服务。改动代码或资源后，开发页确认已热更新；预览产物则先重新构建再刷新。
 
@@ -33,6 +35,8 @@ Node.js 默认版本在 [.nvmrc](../../.nvmrc)，最低兼容约束在 [package.
 | 页面路由入口及文章渲染 | `src/pages/`，文章模板为 `src/pages/[...id].astro` |
 | 中英文共用的首页、关于、归档、月份与领域页面主体 | `src/components/Home.astro`、`About.astro`、`Archive.astro`、`Month.astro`、`Domain.astro` |
 | 列表卡片 | `src/components/NoteCard.astro` |
+| 文章评论与共用讨论登记 | `src/components/Comments.astro`、`src/data/discussions.json`、`src/lib/discussions.mjs` |
+| 讨论创建与远端核验、允许来源 | `scripts/discussions.mjs`、`giscus.json` |
 | 全站样式与响应式布局 | `src/styles/global.css` |
 | 静态 Mermaid 渲染 | `src/lib/markdown-diagrams.mjs` 与 `astro.config.mjs` |
 | RSS 与 sitemap | `src/pages/rss.xml.js`、`src/pages/sitemap.xml.ts` |
@@ -52,6 +56,7 @@ Node.js 默认版本在 [.nvmrc](../../.nvmrc)，最低兼容约束在 [package.
 3. 生成页面：内部链接、锚点、图片、脚本、样式存在；每页一个一级标题，ID 唯一，SEO 元信息、语言属性与互相对应的 hreflang 存在，规范地址指向本页，SVG 片段引用有效；无未渲染 Mermaid 代码或公开 DIKW 框架术语。
 4. 双语：每篇有中英两版，日期、主要来源 URL/日期、领域词和封面对应，主要标题、表格与图表数量一致。
 5. RSS 和 sitemap：产物存在，其列出的本站页面可找到，两个订阅源不混入另一语言文章。
+6. 评论：每个文章对恰有一个登记编号，无跨文章重复编号或多余登记；两语产物加载同一讨论，界面语言、浅色主题、延迟加载和 GitHub 直达链接正确。远端实际存在性另由 `npm run discussion:check` 核验。
 
 它不联网逐条探测外链，也不证明来源真实、论证成立或画面正确。来源核验由 [内容原则](../content/policy.md) 与编辑审核负责。
 
@@ -60,6 +65,7 @@ Node.js 默认版本在 [.nvmrc](../../.nvmrc)，最低兼容约束在 [package.
 - 内容：术语层级、引用与推断、完整性、日期和来源归属。
 - 页面或封面：桌面和手机，无整页横向溢出；浅色排版可读，文/A切换到相应文章、月份或领域；目录跳转、当前章节、侧栏或折叠状态正确；封面小图和大图均合适。
 - 图表：文字、方向和关系正确；窄屏宽图在图内滚动。
+- 评论：两语同一讨论、界面语言及手机布局正确；真实登录后的发帖/回复按 [讨论指南](../operations/discussions.md) 单独核验，未执行时说明范围。
 
 工具不可用时报告未检查的项目与原因，不把缺少证据写成通过。只执行与变更有关的检查；通过后有新增修改或失败再重跑。
 

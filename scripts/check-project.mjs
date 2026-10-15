@@ -6,6 +6,7 @@ import { marked } from 'marked';
 import { parse, parseFragment } from 'parse5';
 import GithubSlugger from 'github-slugger';
 import config from '../astro.config.mjs';
+import { discussionConfig, discussionFor, validateDiscussions } from '../src/lib/discussions.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = resolve(root, 'dist');
@@ -178,6 +179,27 @@ for (const [key,pair] of pairs) {
   const cover = item => item.doc.data.cover ? resolve(dirname(item.file),item.doc.data.cover) : null;
   if (cover(a) !== cover(b)) report(b.file,'Language editions must share the same cover asset');
   if (JSON.stringify(a.doc.structure) !== JSON.stringify(b.doc.structure)) report(b.file,'Headings, tables or diagram counts differ between editions');
+}
+for (const error of validateDiscussions(new Set(pairs.keys()))) report(resolve(root,'src/data/discussions.json'), error);
+for (const [key, pair] of pairs) {
+  if (!Number.isSafeInteger(discussionConfig.articles[key])) continue;
+  const discussion = discussionFor(key);
+  for (const locale of ['zh-CN', 'en']) {
+    const file = resolve(dist, locale === 'en' ? `en/${key}/index.html` : `${key}/index.html`);
+    const page = pages.get(file);
+    if (!page || !pair[locale]) continue;
+    const widgets = page.tags.filter(t => t.name === 'script' && t.a.src === 'https://giscus.app/client.js');
+    if (widgets.length !== 1) { report(file,'Expected one giscus widget'); continue; }
+    const attrs = widgets[0].a;
+    for (const [attribute, value] of Object.entries({
+      'data-repo': discussionConfig.repository, 'data-repo-id': discussionConfig.repositoryId,
+      'data-category': discussionConfig.category, 'data-category-id': discussionConfig.categoryId,
+      'data-mapping': 'number', 'data-term': String(discussion.number),
+      'data-lang': locale, 'data-theme': 'light', 'data-loading': 'lazy',
+    })) if (attrs[attribute] !== value) report(file,`Invalid giscus ${attribute}`);
+    if (!page.tags.some(t => t.name === 'section' && t.a['data-article-key'] === key)) report(file,'Missing canonical article key on discussion section');
+    if (!page.links.includes(discussion.url)) report(file,'Missing direct GitHub discussion link');
+  }
 }
 for (const pathname of ['rss.xml','en/rss.xml','sitemap.xml']) {
   const file = resolve(dist,pathname);
