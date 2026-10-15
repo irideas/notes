@@ -55,6 +55,7 @@ Search Console 获得授权后，验证 `https://notes.irideas.pro/`，提交 `h
 - 临时注入重复 canonical、缺失 404 noindex、缺失分享图 alt、错误 lastmod、无效 XML、提前加载 Google、无效 JSON-LD，七种错误全部被拒绝；恢复产物后检查通过。错误样例未提交。
 - Chromium 在 390px 和 1440px 检查 14 个路由，无横向溢出；语言切换与手机文章目录有效。两语控件的同意前、拒绝及刷新后、撤回后均无 Google 请求；同意后仅加载一次正确脚本，撤回清除 Cookie。预览域名、不可用本地存储、跨标签页撤回、隐私说明入口均通过。
 - 浏览器测试将站点资源映射到本地构建产物，并拦截、模拟 Google 脚本；没有向真实数据流发送测试流量。它证明控件和加载行为，不代表 GA 后台已经收到线上数据。线上发布与实时报告另按本次 PR/部署记录核验。
+- `npm run discussion:check` 已尝试，环境的 GitHub GraphQL 请求返回 `Forbidden`，未记为通过。现有公开讨论 #1 可访问，包含两语文章回链；这不替代分类 ID、讨论唯一性的远端校验。本次未改文章内容、讨论登记或评论组件，本地双语同讨论检查通过。
 
 界面截图：[中文手机](../development/screenshots/analytics-zh-mobile.png) · [英文桌面](../development/screenshots/analytics-en-desktop.png)。
 
