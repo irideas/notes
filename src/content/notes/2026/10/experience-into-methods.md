@@ -5,8 +5,8 @@ description: 读《流程、清单和经验库》：一个人会做的事，怎�
 tags:
   - 阅读笔记
   - 工作方法
-cover: ../../../../assets/meadow.png
-coverAlt: 开阔的绿色草原、远处的山丘，以及明亮的蓝天白云。
+cover: ./experience-into-methods.png
+coverAlt: 淡彩简笔画：一个人铺好可复用的台阶，后面的人沿着这些台阶继续前进。
 coverCredit: 封面为 AI 生成图片
 ---
 

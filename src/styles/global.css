@@ -23,3 +23,7 @@ body::after{bottom:0;height:150px;background-image:linear-gradient(to bottom,var
 :root[data-theme=dark]{--page:#18201b;--surface:#202a23;--soft:#2b392d;--accent:#b3cfe1;--sky-wash:rgba(24,32,27,.88);--grass-wash:rgba(24,32,27,.9)}
 @media(max-width:800px){.home-intro h1{font-size:37px}.home-intro>p{font-size:13px}}
 @media(max-width:600px){.home-intro{display:block;padding:31px 0 28px}.home-intro h1{font-size:36px}.home-intro>p{margin-top:16px;font-size:14px}.site-footer{padding-bottom:48px}.note-card-no-cover .note-card-body{padding:24px}.note-card-no-cover.note-card-featured h2{font-size:25px}body::before{height:150px}body::after{height:120px}}
+
+/* Article index uses a smaller, uncropped illustration; the reading page uses the full cover. */
+.note-card-featured{grid-template-columns:.85fr 1.15fr}.note-card-featured .note-card-cover{display:flex;align-items:center;background:var(--surface)}.note-card-featured .note-card-cover img{height:auto;min-height:0;aspect-ratio:16/9;object-fit:contain;object-position:center}
+@media(max-width:600px){.note-card-featured{display:block}.note-card-featured .note-card-cover img{aspect-ratio:16/9}.note-card-featured .note-card-body{padding-top:20px}}
