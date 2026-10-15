@@ -195,7 +195,7 @@ for (const [key, pair] of pairs) {
       'data-repo': discussionConfig.repository, 'data-repo-id': discussionConfig.repositoryId,
       'data-category': discussionConfig.category, 'data-category-id': discussionConfig.categoryId,
       'data-mapping': 'number', 'data-term': String(discussion.number),
-      'data-lang': locale, 'data-theme': 'light', 'data-loading': 'lazy',
+      'data-lang': locale, 'data-theme': 'light', 'data-loading': 'lazy', 'data-reactions-enabled': '1',
     })) if (attrs[attribute] !== value) report(file,`Invalid giscus ${attribute}`);
     if (!page.tags.some(t => t.name === 'section' && t.a['data-article-key'] === key)) report(file,'Missing canonical article key on discussion section');
     if (!page.links.includes(discussion.url)) report(file,'Missing direct GitHub discussion link');
