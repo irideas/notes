@@ -20,8 +20,8 @@ test('source IDs cannot silently collide', () => {
   assert.ok(metadataErrors({sources:[{id:'same'},{id:'same'}]}).length);
 });
 test('production identity accepts a tool name with an optional known model', () => {
-  for (const actor of ['human:editor','process:editorial','codex','codex/gpt-6.1 sol']) assert.ok(isActor(actor),actor);
-  for (const actor of ['','human:','codex/','codex/gpt\nsol','codex/model/extra','agent tool/v1']) assert.equal(isActor(actor),false,actor);
+  for (const actor of ['human:editor','process:editorial','example-agent','example-agent/example-model','another-agent/model name']) assert.ok(isActor(actor),actor);
+  for (const actor of ['','human:','example-agent/','example-agent/model\nname','example-agent/model/extra','agent tool/v1']) assert.equal(isActor(actor),false,actor);
 });
 test('only the leading image is promoted, with standard Markdown alt and credit', async () => {
   assert.deepEqual(await coverFromBody('![Illustration](./cover.png "AI illustration")\n\nText'),{path:'./cover.png',alt:'Illustration',credit:'AI illustration'});
