@@ -1,16 +1,14 @@
 ---
 import Base from '../layouts/Base.astro';
 import NoteCard from '../components/NoteCard.astro';
-import { Image } from 'astro:assets';
-import meadow from '../assets/meadow.png';
 import { allNotes, groupedMonths, monthTitle, monthUrl } from '../lib/notes';
 const notes = await allNotes();
 const [latest, ...rest] = notes;
 const months = groupedMonths(notes);
 ---
-<Base image={meadow.src}>
+<Base image={latest?.data.cover?.src}>
   <div class="shell">
-    <section class="home-intro" aria-labelledby="home-title"><div class="intro-copy"><span class="eyebrow">想法 · 经验 · 故事</span><h1 id="home-title">看到好东西，<br />记一下<span class="title-dot">。</span></h1><p>读到的、做过的、后来想明白的。<br />随手记一点，留着以后慢慢看。</p></div><figure class="intro-photo"><Image src={meadow} alt="开阔的绿色草原、远处的山丘与明亮的蓝天白云。" widths={[600, 900, 1300]} sizes="(max-width: 700px) 100vw, 62vw" width={1300} format="webp" loading="eager" /><figcaption class="sr-only">站点视觉图片由 AI 生成。</figcaption></figure></section>
+    <section class="home-intro" aria-labelledby="home-title"><div><span class="eyebrow">想法 · 经验 · 故事</span><h1 id="home-title">看到好东西，<br />记一下<span class="title-dot">。</span></h1></div><p>读到的、做过的、后来想明白的。<br />随手记一点，留着以后慢慢看。</p></section>
     <section aria-labelledby="latest-title"><div class="section-heading"><h2 id="latest-title">最近记的</h2><a href="/archive/">全部记录 <span aria-hidden="true">↗</span></a></div>
       {latest ? <NoteCard note={latest} featured /> : <p class="empty-state">这里很快就会有第一篇记录。</p>}
       {rest.length > 0 && <div class="note-grid">{rest.map(note => <NoteCard note={note} />)}</div>}

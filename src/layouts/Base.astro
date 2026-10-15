@@ -1,11 +1,14 @@
 ---
 import '../styles/global.css';
 import { siteTitle, siteDescription } from '../lib/notes';
+import { getImage } from 'astro:assets';
+import meadow from '../assets/meadow.png';
 interface Props { title?: string; description?: string; image?: string; type?: string; }
 const { title, description = siteDescription, image, type = 'website' } = Astro.props;
 const pageTitle = title ? `${title} · ${siteTitle}` : siteTitle;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const current = Astro.url.pathname;
+const scenery = await getImage({ src: meadow, width: 1400, format: 'webp', quality: 70 });
 ---
 <!doctype html>
 <html lang="zh-CN">
@@ -31,7 +34,7 @@ const current = Astro.url.pathname;
       try { const t = localStorage.getItem('notes-theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch {}
     </script>
   </head>
-  <body>
+  <body style={`--scenery: url("${scenery.src}")`}>
     <a class="skip-link" href="#main">跳到正文</a>
     <header class="site-header shell">
       <a class="brand" href="/" aria-label="记点儿东西，首页"><span class="brand-mark" aria-hidden="true">记</span><span>记点儿东西<span class="brand-en">NOTES BY IRIDEAS</span></span></a>
