@@ -1,12 +1,13 @@
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { resolve, dirname, relative, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { parse as yaml } from 'yaml';
-import { marked } from 'marked';
+import { markdownToMdast } from 'satteri';
 import { parse, parseFragment } from 'parse5';
 import GithubSlugger from 'github-slugger';
 import config from '../astro.config.mjs';
 import { discussionConfig, discussionFor, validateDiscussions } from '../src/lib/discussions.mjs';
+import { parseDocument } from '../src/lib/raw-bundle.mjs';
+import { checkRaw } from './check-raw.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = resolve(root, 'dist');
@@ -53,33 +54,40 @@ function htmlInfo(source) {
   });
   return { document, ids, duplicateIds, links, fragments, tags, lang, canonical, alternates };
 }
-function markdownInfo(source) {
-  const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
-  const data = match ? yaml(match[1]) : {};
-  const body = match ? source.slice(match[0].length) : source;
-  const tokens = marked.lexer(body);
+async function markdownInfo(source) {
+  const {data,body} = parseDocument(source);
+  const tree = await markdownToMdast(body);
   const ids = new Set(); const links = []; const slugger = new GithubSlugger();
+  const footnotes = new Set(); const references = new Set(); const definitions = new Map(); const linkReferences = [];
   const structure = { h2: 0, h3: 0, tables: 0, diagrams: 0 };
   let h1 = 0;
-  marked.walkTokens(tokens, token => {
+  const label = node => node.type === 'html' ? text(parseFragment(node.value)) : node.value || (node.children || []).map(label).join('');
+  const visit = token => {
     if (token.type === 'heading') {
-      const label = text(parseFragment(marked.parseInline(token.text)));
-      ids.add(slugger.slug(label));
+      ids.add(slugger.slug(label(token)));
       if (token.depth === 1) h1++;
       if (token.depth === 2) structure.h2++;
       if (token.depth === 3) structure.h3++;
     }
     if (token.type === 'table') structure.tables++;
     if (token.type === 'code' && token.lang?.split(/\s+/)[0] === 'mermaid') structure.diagrams++;
-    if (['link','image'].includes(token.type)) links.push(token.href);
-    if (token.type === 'html') walk(parseFragment(token.text), node => {
+    if (['link','image'].includes(token.type)) links.push(token.url);
+    if (token.type === 'definition') definitions.set(token.identifier, token.url);
+    if (['linkReference','imageReference'].includes(token.type)) linkReferences.push(token.identifier);
+    if (token.type === 'footnoteDefinition') footnotes.add(token.identifier);
+    if (token.type === 'footnoteReference') references.add(token.identifier);
+    if (token.type === 'text') for (const match of token.value.matchAll(/\[\^([^\]]+)\]/g)) references.add(match[1]);
+    if (token.type === 'html') walk(parseFragment(token.value), node => {
       const a = attributes(node);
       if (a.id) ids.add(a.id);
       if (a.href) links.push(a.href);
       if (a.src) links.push(a.src);
     });
-  });
-  return { data, body, ids, links, h1, structure };
+    for (const child of token.children || []) visit(child);
+  };
+  visit(tree);
+  for (const id of linkReferences) if (definitions.has(id)) links.push(definitions.get(id));
+  return { data, body, ids, links, h1, structure, footnotes, references };
 }
 async function publicTarget(url) {
   const path = resolve(dist, `.${decodeURIComponent(url.pathname)}`);
@@ -137,7 +145,7 @@ const noteRoot = resolve(root,'src/content/notes');
 const markdownFiles = [...['README.md','AGENTS.md','CONTRIBUTING.md'].map(f => resolve(root,f)), ...await files(resolve(root,'docs'),'.md'), ...await files(resolve(root,'.github'),'.md'), ...await files(noteRoot,'.md')];
 const markdown = new Map(); const pairs = new Map();
 for (const path of markdownFiles) {
-  try { markdown.set(path,markdownInfo(await readFile(path,'utf8'))); } catch (error) { report(path,`Cannot parse Markdown/frontmatter: ${error.message}`); }
+  try { markdown.set(path,await markdownInfo(await readFile(path,'utf8'))); } catch (error) { report(path,`Cannot parse Markdown/frontmatter: ${error.message}`); }
 }
 for (const [file,doc] of markdown) {
   const isNote = file.startsWith(`${noteRoot}/`);
@@ -152,6 +160,14 @@ for (const [file,doc] of markdown) {
       pair[match[1] ? 'en' : 'zh-CN'] = {file,doc}; pairs.set(key,pair);
     }
     if (doc.h1) report(file,'Article body must start below H1');
+    if (doc.data.language !== (path.startsWith('en/') ? 'en' : 'zh-CN')) report(file,'Frontmatter language differs from article path');
+    const sources = new Set((doc.data.sources || []).map(source => source.id));
+    for (const id of doc.references) {
+      if (!doc.footnotes.has(id)) report(file,`Missing footnote definition: ${id}`);
+      if (!sources.has(id)) report(file,`Footnote has no sources entry: ${id}`);
+    }
+    for (const id of doc.footnotes) if (!doc.references.has(id)) report(file,`Unused footnote definition: ${id}`);
+    for (const id of sources) if (!doc.references.has(id)) report(file,`Source has no claim attribution: ${id}`);
   }
   for (const href of doc.links) {
     if (!href || /^(https?:|mailto:|tel:|data:|\/\/)/i.test(href)) {
@@ -173,8 +189,9 @@ for (const [file,doc] of markdown) {
 for (const [key,pair] of pairs) {
   if (!pair.en || !pair['zh-CN']) { report(noteRoot,`Missing language counterpart for ${key}`); continue; }
   const a = pair['zh-CN']; const b = pair.en;
-  for (const field of ['date','updated','asOf']) if (a.doc.data[field] !== b.doc.data[field]) report(b.file,`Paired ${field} differs`);
-  for (const field of ['url','date']) if (a.doc.data.source?.[field] !== b.doc.data.source?.[field]) report(b.file,`Paired source.${field} differs`);
+  for (const field of ['date','asOf','primary_source']) if (a.doc.data[field] !== b.doc.data[field]) report(b.file,`Paired ${field} differs`);
+  const sourceIdentity = doc => (doc.data.sources || []).map(({id,resource,published_on}) => ({id,resource,published_on})).sort((a,b) => a.id.localeCompare(b.id));
+  if (JSON.stringify(sourceIdentity(a.doc)) !== JSON.stringify(sourceIdentity(b.doc))) report(b.file,'Paired source IDs, resources or publication dates differ');
   if (JSON.stringify(a.doc.data.tags || []) !== JSON.stringify(b.doc.data.tags || [])) report(b.file,'Paired domain keys differ');
   const cover = item => item.doc.data.cover ? resolve(dirname(item.file),item.doc.data.cover) : null;
   if (cover(a) !== cover(b)) report(b.file,'Language editions must share the same cover asset');
@@ -213,7 +230,8 @@ for (const pathname of ['rss.xml','en/rss.xml','sitemap.xml']) {
     for (const match of source.matchAll(/<item>[\s\S]*?<link>([^<]+)<\/link>/g)) if (new URL(match[1]).pathname.startsWith('/en/') !== english) report(file,'Mixed languages in feed');
   }
 }
+await checkRaw({root,dist,noteRoot,markdown,pages,report});
 if (errors.length) {
   console.error(`Project checks failed (${errors.length}):\n${errors.map(e => `- ${e}`).join('\n')}`);
   process.exitCode = 1;
-} else console.log(`Project checks passed: ${markdown.size} Markdown files, ${pages.size} pages, ${pairs.size} bilingual article pair(s), feeds, assets and anchors.`);
+} else console.log(`Project checks passed: ${markdown.size} Markdown files, ${pages.size} pages, ${pairs.size} bilingual article pair(s), OKF/raw parity, timezone metadata, citations, feeds, assets and anchors.`);

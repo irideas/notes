@@ -27,6 +27,7 @@ npm run dev
 | 贡献、更正与提交 | [贡献指南](CONTRIBUTING.md) |
 | 了解内容定位与质量要求 | [内容原则](docs/content/policy.md) |
 | 新增、修订文章或更换配图 | [写作指南](docs/content/authoring.md) |
+| 元信息、时间、OKF 与 Raw 原稿 | [文章格式](docs/content/format.md) |
 | 开发网站、预览与检查 | [开发指南](docs/development/guide.md) |
 | 发布、线上核验与恢复 | [发布指南](docs/operations/deployment.md) |
 | 文章评论与双语共用讨论 | [讨论指南](docs/operations/discussions.md) |

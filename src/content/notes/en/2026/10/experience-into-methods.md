@@ -1,18 +1,69 @@
 ---
+type: Article
 title: 'Cogware: How Organizational Capability Accumulates and Evolves'
+language: en
 date: '2026-10-15'
-updated: '2026-10-15'
+first_recorded_at: '2026-10-15T16:19:47+08:00'
+first_recorded_commit: af280d48faedbb75636e3f18d2f9a2cced81c05d
+generated:
+  by: codex/unknown-version
+  at: '2026-10-15T18:21:43+08:00'
 description: How skills, guardrails and memory help organizations retain methods, prevent critical errors and improve through practice, with applications to business operations, software engineering and AI collaboration.
 tags:
-  - 组织学习
-  - 知识管理
-source:
-  title: 'Processes, Checklists, and Experience Repositories: Externalizing Intelligence into a System'
-  author: Wan Weigang
-  publication: 'Dedao · Modern Thinking Tools: 100 Lectures'
-  date: '2026-07-09'
-  url: https://www.dedao.cn/course/article?id=Qe6EGjvO7zRKZqoM76XnDrkMLPgAp9
-revision: Added the complete English edition and revised the cover to illustrate skills, guardrails, memory and an improving feedback cycle.
+- 组织学习
+- 知识管理
+primary_source: wan-cogware
+sources:
+- id: wan-cogware
+  resource: https://www.dedao.cn/course/article?id=Qe6EGjvO7zRKZqoM76XnDrkMLPgAp9
+  title: 'Processes, Checklists and Experience Repositories: Externalizing Intelligence into Systems'
+  author: human:wan-weigang
+  author_name: Wan Weigang
+  publication: 'Dedao · Wan Weigang: 100 Lessons in Modern Thinking Tools'
+  published_on: '2026-07-09'
+- id: surgery
+  resource: https://pubmed.ncbi.nlm.nih.gov/19144931/
+  title: 'Haynes et al. (2009): Surgical safety checklist study'
+- id: offloading
+  resource: https://pubmed.ncbi.nlm.nih.gov/27542527/
+  title: 'Risko and Gilbert (2016): Cognitive offloading'
+- id: stickiness
+  resource: https://onlinelibrary.wiley.com/doi/10.1002/smj.4250171105
+  title: 'Szulanski (1996): Transfer of best practices within firms'
+- id: aerospace
+  resource: https://www.iso.org/standard/61847.html
+  title: 'ISO 18238:2015: Closed-loop problem management for aerospace products'
+- id: technical-closure
+  resource: https://www.cmse.gov.cn/xwzx/202303/t20230315_53128.html
+  title: 'China Manned Space: Technical and management problem closure'
+- id: postmortem
+  resource: https://sre.google/sre-book/postmortem-culture/
+  title: 'Google SRE: Postmortem culture'
+- id: canary
+  resource: https://sre.google/workbook/canarying-releases/
+  title: 'Google SRE: Canarying releases'
+- id: compatibility
+  resource: https://google.aip.dev/180
+  title: 'Google AIP-180: Backwards compatibility'
+- id: value-stream
+  resource: https://dora.dev/guides/value-stream-management/
+  title: 'DORA: Value stream management'
+- id: agents
+  resource: https://www.anthropic.com/engineering/building-effective-agents
+  title: 'Anthropic: Building effective agents'
+- id: skills
+  resource: https://agentskills.io/home
+  title: 'Agent Skills: Open format overview'
+- id: harness-runtime
+  resource: https://www.anthropic.com/engineering/managed-agents
+  title: 'Anthropic: Scaling Managed Agents'
+- id: openai-harness
+  resource: https://openai.com/index/harness-engineering/
+  title: 'OpenAI: Harness engineering'
+- id: anthropic-harness
+  resource: https://www.anthropic.com/engineering/harness-design-long-running-apps
+  title: 'Anthropic: Harness design for long-running application development'
+revision: Refines the legacy-pagination example and verification criteria, adds concise harness cases from OpenAI and Anthropic, and records timezone-aware metadata and source provenance.
 cover: ../../../2026/10/experience-into-methods.png
 coverAlt: Editorial illustration of drafting a method, checking quality with a measuring tool, and archiving experience, linked by an ascending feedback path.
 coverCredit: AI-generated illustration
@@ -20,7 +71,7 @@ coverCredit: AI-generated illustration
 
 > This article follows the source's explanatory order: define Cogware as a whole, explain skills, guardrails and memory, examine their feedback loop, and then connect the model to business operations, software engineering and AI collaboration.
 >
-> Interpretation of the source is the main body. Sections marked “Development example” and “AI extension” are application examples, not accounts of an actual team's experience. External sources clarify concepts and provide supporting evidence. The Chinese edition introduces terms in Chinese(English) form; some English names are explanatory translations. This edition uses the corresponding English terms.
+> Interpretation of the source is the main body. Development examples are hypothetical. Vendor cases in the AI extension follow official accounts and do not describe this site's own practice. External sources clarify concepts and provide supporting evidence. The Chinese edition introduces terms in Chinese(English) form; some English names are explanatory translations. This edition uses the corresponding English terms. [^wan-cogware]
 
 ## 1. Why Organizations Need Cogware
 
@@ -99,15 +150,15 @@ The source uses Huawei's introduction of **integrated product development (IPD)*
 
 The point is to organize work across roles into a method that can be executed repeatedly. The source's sequence—first follow the method closely, then optimize it, then stabilize what works—belongs in this organizational change context: learn the method seriously, adapt it through practice and retain validated approaches.
 
-### 3.4 Development Example: Adding a Field to an Order API
+### 3.4 Development Example: Add Pagination to a Legacy API
 
-Suppose a team needs to add an optional field to an order API. Saying “finish development and hand it to testing” still leaves much of the work implicit in individual experience.
+Suppose an order-list API returns all results. The team adds an optional `page_size` parameter, which older clients do not send. If the server now defaults to the first 20 records, an older client may still treat them as the complete order list. The request succeeds, but its business meaning changes.
 
-Making the skill explicit can start with a simple path: confirm the field's meaning and compatibility requirements, change the interface and implementation, add relevant tests, complete integration testing and proceed to release.
+This hypothetical applies Google AIP-180's compatibility guidance; it is not a Google incident. It concerns migration of a legacy API. New APIs should consider pagination from the outset. [^compatibility]
 
-The process explains handoffs among product, development and testing. Operational guidance explains how to update API documentation, generate clients or run tests. A playbook can address compatibility issues affecting particular customers.
+A skill organizes the work: establish existing calls and default behavior, decide the migration approach, then implement, test and integrate it. The API specification explains compatibility requirements; operating guidance describes verification of legacy and paginated calls; the process identifies who confirms behavior and who takes over verification.
 
-This establishes how work progresses. Guardrails are needed to confirm that the conditions for the next step have actually been met.
+The skill explains how work proceeds. Guardrails must confirm the critical facts before release.
 
 ## 4. The Second Component: Guardrails Prevent Critical Errors
 
@@ -133,24 +184,24 @@ The source also treats a checklist as a synchronization mechanism: key participa
 
 ### 4.3 Source Example: Why Surgical Teams Also Need Checklists
 
-The 2009 study cited by the source introduced a 19-item surgical safety checklist in eight hospitals. Before-and-after observations showed mortality declining from 1.5% to 0.8%, and inpatient complications from 11% to 7%. The study described these changes as associated with checklist implementation; it helps illustrate how even highly trained teams can benefit from checking critical items. [Original study abstract](https://pubmed.ncbi.nlm.nih.gov/19144931/)
+The 2009 study cited by the source introduced a 19-item surgical safety checklist in eight hospitals, involving patients undergoing noncardiac surgery. Before-and-after observations showed mortality declining from 1.5% to 0.8%, and inpatient complications from 11% to 7%. The study described these changes as associated with checklist implementation; it helps illustrate how even highly trained teams can benefit from checking critical items. [^surgery]
 
-One explanatory concept is **cognitive offloading**: using external actions or changes in the environment to alter a task's information-processing demands and reduce internal cognitive load. A checklist carries part of the remembering and checking work, leaving more attention available for professional judgment. [Risko and Gilbert's review](https://pubmed.ncbi.nlm.nih.gov/27542527/)
+From the perspective of **cognitive offloading**, checklists can reduce internal cognitive demands by moving part of remembering and checking into the environment. This is an explanatory perspective, not a mechanism established by the surgical study. Cognitive offloading changes a task's information-processing demands through external actions or changes to the environment. [^offloading]
 
-### 4.4 Development Example: Writing a Useful Release Checklist
+### 4.4 Development Example: Write a Useful Release Checklist
 
-For the API change described earlier, possible checks include the following. They must be adapted to the team's actual risks:
+For the pagination change, adapt these checks to the team's actual risks:
 
-- Is the commit or artifact being released the version that passed verification?
-- Has the field change been checked against the behavior of older clients?
-- Is the release target confirmed as the intended service and environment?
-- Are there explicit stopping conditions and a response plan if anomalies appear?
+- Without `page_size`, does an older client still receive the agreed complete result? Does the test contain more than 20 records so truncation would be visible?
+- Do page boundaries, subsequent pages and empty results have explicit expectations and verification results?
+- Is the release artifact the verified version, and are the target service and environment correct?
+- Which signals will be observed, when will rollout stop, and how will anomalies be handled?
 
-Each question points to verifiable facts, rather than a general claim that someone “checked carefully.”
+Each question concerns verifiable facts. The source's requirements for a good checklist remain **brief, firm and verifiable**. Cover critical risks first. Automate reliable checks and supply evidence for professional judgment.
 
-The source's criteria for a good checklist can be expressed as **brief, firm and verifiable**. Cover critical risks first. Checks that can be reliably automated can be delegated to tools. Where professional judgment is needed, provide the evidence required to exercise it.
+A **canary release** introduces a new version to part of the traffic and compares it with a control group retaining the old version. Signals should distinguish versions, with stopping or rollback conditions agreed in advance. Aggregate success rates can conceal problems in the new version. [^canary]
 
-A **canary release** is an engineering example: expose a new version to a small share of traffic, observe it and then decide whether to expand. Google SRE uses this approach to manage release risk; the indicators and stopping conditions still need to be designed for the service. [Google SRE: Canarying releases](https://sre.google/workbook/canarying-releases/)
+Here, orders may be incomplete even when HTTP responses succeed. Compatibility tests must directly verify completeness; release observation adds relevant business signals. Small traffic alone cannot establish correct behavior.
 
 ## 5. The Third Component: Memory Keeps Experience Useful
 
@@ -166,7 +217,7 @@ The memory component also requires distinct levels.
 
 First is the content of experience. A **best practice** is an approach validated as effective in a particular context. Failure cases retain what happened, under what conditions and what was learned. Experiment records preserve methods, conditions and results. All are forms of experience an organization can accumulate.
 
-Second are the activities that develop experience. A **retrospective** reviews completed work, analyzes it and proposes improvements. In an incident context, a **postmortem** typically records impact, response, causes and follow-up actions. Reviews produce records; those records must be organized to become memory that future work can use. [Google SRE: Postmortem culture](https://sre.google/sre-book/postmortem-culture/)
+Second are the activities that develop experience. A **retrospective** reviews completed work, analyzes it and proposes improvements. In an incident context, a **postmortem** typically records impact, response, causes and follow-up actions. Reviews produce records; those records must be organized to become memory that future work can use. [^postmortem]
 
 Third is the storage medium. A **knowledge base** supports the organization and retrieval of knowledge. Its portion devoted to working experience can be called an experience repository. It can carry memory, but stored content still needs to be found and used when relevant work occurs.
 
@@ -174,7 +225,7 @@ Third is the storage medium. A **knowledge base** supports the organization and 
 
 An effective method may depend on a team's customers, people's capabilities, technical conditions and ways of coordinating. Copying the actions does not necessarily reproduce those conditions.
 
-The source cites **internal stickiness**, the difficulty of transferring knowledge and practices within an organization. Research identifies obstacles such as recipients' absorptive capacity, uncertainty about why a practice works and the relationship between the parties. [Szulanski: Transfer of best practices within firms](https://onlinelibrary.wiley.com/doi/10.1002/smj.4250171105)
+The source cites **internal stickiness**, the difficulty of transferring knowledge and practices within an organization. Research identifies obstacles such as a lack of absorptive capacity among recipients, uncertainty about why a practice works and an arduous relationship between the parties. [^stickiness]
 
 At least three questions matter when learning from experience: what problem did the practice solve, why did it work, and does the current organization have the relevant conditions? The source advocates transferring mechanisms and assumptions, then adapting concrete actions locally.
 
@@ -182,7 +233,7 @@ For example, a team that releases frequently may also have automated verificatio
 
 ### 5.4 Source Example: Closing the Loop on Failure
 
-The source uses the Chinese aerospace practice of **closed-loop problem solving**—an explanatory English rendering of the aerospace term used in the source—to show how failures can lead to system updates. It summarizes five requirements:
+The source uses the Chinese aerospace practice of **closed-loop problem solving**—an explanatory English rendering of the aerospace term used in the source—to show how failures can lead to system updates. The five requirements discussed here concern technical problem closure: [^technical-closure]
 
 1. **Locate accurately:** identify where the problem occurred.
 2. **Explain the mechanism:** establish why it happened.
@@ -190,17 +241,17 @@ The source uses the Chinese aerospace practice of **closed-loop problem solving*
 4. **Verify the remedy:** demonstrate that the corrective measure works.
 5. **Extend the lesson:** examine similar areas and apply the improvement more widely.
 
-The official abstract for ISO 18238:2015 confirms that the aerospace standard concerns closed-loop management of product quality problems, including mitigation of effects, root-cause identification, containment and lessons learned. The five-part summary above follows the source article. [ISO 18238:2015 official description](https://www.iso.org/standard/61847.html)
+The official abstract for ISO 18238:2015 confirms that the aerospace standard concerns closed-loop management of product quality problems, including mitigation of effects, root-cause identification, containment and lessons learned. The five-part summary above follows the source article. [^aerospace]
 
 In software engineering, reproduction must be interpreted in light of risk and feasibility. Use an isolated environment when possible. If complete reproduction is unavailable, retain the uncertainty and seek sufficient evidence to test the explanation, rather than causing another production failure.
 
-### 5.5 Development Example: Why Older Clients Were Affected Again
+### 5.5 Development Example: Turn Missing Orders into a Future Check
 
-Suppose an older client develops a parsing error after the API field change goes live. Fixing the code addresses the immediate issue. Mentioning it in a weekly report merely records the event.
+Suppose the pagination change reaches production and older clients miss orders. Investigation finds that legacy requests omit `page_size`, the new server truncates results by default, and test data contained fewer than 20 records, so the condition was never exercised.
 
-Useful memory also explains the affected client's characteristics, why existing tests missed the issue, and where compatibility requirements were lost in a handoff. Relevant cases can then be added to tests, requirements incorporated into the API change guide, and similar interfaces examined.
+After correcting the immediate behavior, memory should retain the cause, affected calls and limits of the lesson. Two changes follow: add a legacy-request regression fixture containing more than one page, and require the API change guide to examine defaults when new parameters are omitted. Check similar APIs according to risk.
 
-During the next comparable change, that experience participates through tests, guidance and checks. A past failure thereby becomes part of organizational capability.
+During the next change, confirm that the fixture actually runs and the guidance applies. **Experience becomes usable through explaining the cause, changing methods or checks, and verifying subsequent effects.** This is a proposed improvement path in the hypothetical, not a report of a team's completed practice.
 
 ## 6. How the Three Components Form a Feedback Loop
 
@@ -231,6 +282,8 @@ flowchart TD
 
 The source places innovation and process in the same evolutionary cycle: new attempts supply candidate methods, experiments help select them, processes retain effective practices and real-world results drive further revision.
 
+The source also uses the scientific method as an analogy: reproducible experimental descriptions carry skills, peer review provides guardrails, and journals retain memory. Its contrast with the transmission of knowledge through *Tiangong Kaiwu* emphasizes that experience needs preservation, testing by others, communication and further development.
+
 The compatibility failure in the development example follows this pattern. The failure is explained, experience retained, tests and change guidance updated, and subsequent execution checks whether the improvement works.
 
 **The loop is closed when the experience has changed the next action.**
@@ -254,7 +307,7 @@ flowchart LR
     E --> F["Feedback and improvement"]
 ```
 
-This is a simplified illustration for identifying handoffs and feedback points. DORA's analysis of software delivery value streams likewise emphasizes observing work from idea to production and identifying delays, bottlenecks and opportunities for improvement. [DORA: Value stream management](https://dora.dev/guides/value-stream-management/)
+This is a simplified illustration for identifying handoffs and feedback points. DORA's analysis of software delivery value streams likewise emphasizes observing work from idea to production and identifying delays, bottlenecks and opportunities for improvement. [^value-stream]
 
 Along the path, ask whether important work has a clear method, whether critical actions have necessary checks, and whether successes and failures influence the next task.
 
@@ -272,63 +325,59 @@ The difference is whether the organization can retain capability, and whether re
 
 ### 7.3 The Human Contribution Within the System
 
-The source concludes by locating the human contribution in judging exceptions, detecting anomalies, handling value conflicts, updating experience and accepting responsibility for results. Cogware carries the repeatable and transferable parts; people continue to address problems not yet covered by rules.
-
-It also contrasts the scientific method with the transmission of knowledge through *Tiangong Kaiwu*, highlighting mechanisms needed for continuing accumulation: experience must be preserved, tested, communicated and developed further.
+The source concludes by locating the human contribution in judging exceptions, detecting anomalies, handling value conflicts, updating experience and accepting responsibility for results. Cogware carries the repeatable and transferable parts; people continue to address problems not yet covered by rules. This system requires continuing human maintenance and input; it does not evolve automatically.
 
 For a team, an individual's contribution includes both completing the current task and enabling subsequent colleagues to perform the work better.
 
-## 8. AI Extension: Apply the Same Reasoning to AI Coding
+## 8. AI Extension: Connect Methods, Checks and Experience to Execution
 
-This section is an engineering extension. Introducing AI does not change the definitions of the three components. They provide a way to examine AI's participation in real work.
+This engineering extension retains Cogware's three components. Here, an **AI agent** uses a model to choose actions, invoke tools and continue based on results, differing from a workflow that organizes models and tools along predefined paths. [^agents]
 
-In the engineering sense used here, an **AI agent** uses a model to choose the next action, invoke tools and continue a task based on results. Implementations vary. Anthropic distinguishes this dynamic, model-directed approach from workflows that organize models and tools along predefined paths. [Anthropic: Building effective agents](https://www.anthropic.com/engineering/building-effective-agents)
+An **agent harness** is the engineering mechanism around a model that organizes the execution loop, tool calls, context management and runtime control. Implementations draw the boundary differently. Anthropic's Managed Agents describes its harness as the loop calling the model and dispatching tool calls, with session records and the execution environment managed separately. [^harness-runtime]
 
-The example remains adding an optional field to an order API.
+In the pagination example, a harness can let the agent read API requirements, edit code, run compatibility tests, inspect failures and continue correcting them. It provides a way for skills, guardrails and memory to participate in execution; adopting a framework alone does not establish those organizational capabilities.
 
-### 8.1 Skills: Give AI Access to the Team's Methods
+### 8.1 Skills: Help AI Find the Team's Methods
 
-AI can generate code from general knowledge, but it also needs to know how this project structures interfaces, maintains compatibility, verifies work and reports results.
+An **agent skill** packages task guidance and related resources. The Agent Skills open format stores instructions and metadata in `SKILL.md`, with optional scripts and reference material. [^skills]
 
-A **tool** is a concrete function an agent can invoke, such as searching code, reading a file or running a test. Tools supply actions; the broader skill defined earlier explains how to organize those actions for a class of tasks.
+For pagination, the method is to establish existing behavior before designing migration and verification. Project documentation, skill files and test scripts can carry it together. The organizational skill is the method; an agent skill file is one possible carrier.
 
-An **agent skill** packages task-specific guidance and related resources for an agent. The Agent Skills open format stores instructions and metadata in `SKILL.md`, with optional scripts, references and templates. [Agent Skills overview](https://agentskills.io/home)
+> **Case | OpenAI: A Short Entry Point into Maintainable Engineering Knowledge**
+>
+> **What happened:** The team found a large `AGENTS.md` containing every requirement difficult to maintain.
+>
+> **Engineering mechanism:** A short `AGENTS.md` directs agents to structured project documentation. Linters and structural tests enforce some constraints, while reviews and bugs feed improvements into documentation and tooling rules. [^openai-harness]
+>
+> **Takeaway:** The entry point makes methods discoverable, executable checks verify constraints, and feedback improves both. Choose a structure appropriate to the project.
 
-The team could package its API change method as a skill: inspect existing conventions, modify the implementation, add compatibility verification, and report the changes and results. Scripts can carry concrete testing commands.
+### 8.2 Guardrails: Verify Delivery Through Running Behavior
 
-The relationship is that “skill” in the source is the broader organizational method; an agent skill is one way to carry such a method within an AI toolchain. Writing the file is only a start: the team must verify that it helps work complete reliably across tasks.
+Writing “must test” provides guidance. Incorporating compatibility tests into checks before delivery establishes an executable verification mechanism. Here, retain a legacy request omitting the parameter and verify the agreed behavior with more than one page of results. Commands, tested versions and actual results should be inspectable.
 
-### 8.2 Guardrails: Implement Requirements Through Checks and Permissions
+> **Case | Anthropic: An Existing Function Can Still Leave a Feature Broken**
+>
+> **What happened:** In a tile-editor task, a rectangle-fill function existed, but dragging placed tiles only at the start and end instead of filling the rectangle.
+>
+> **Engineering mechanism:** Before coding, the generator agent and evaluator agent agreed on verifiable completion criteria. The evaluator agent used Playwright on the running application and discovered that event handling did not correctly trigger the fill logic. [^anthropic-harness]
+>
+> **Takeaway:** Verify the actions users actually perform. A function's presence or a model's completion claim cannot substitute for running verification. Model evaluation can also miss problems; use deterministic tests where feasible.
 
-In AI coding, guardrails still ask whether the action meets requirements and which errors must be prevented.
+### 8.3 Memory: Distinguish Task Progress from Organizational Experience
 
-For the API field change, compatibility tests can check older clients, code review can compare implementation with requirements, and tool permissions can limit what the agent may modify or execute. Releases follow the team's established authorization and deployment requirements.
+A progress log records changed files and unfinished steps, enabling a later session to continue. Organizational experience also explains why an event occurred, when its lesson applies and how later methods changed. These serve different purposes.
 
-Asking AI to follow a rule provides guidance. Boundaries requiring reliable enforcement should also be carried by tests, permissions and runtime checks. OpenAI's documentation discusses input, output and tool-call checks alongside human approvals, emphasizing checks near the corresponding tool-execution boundary. [OpenAI: Guardrails and approvals](https://developers.openai.com/api/docs/guides/agents/guardrails-approvals)
+For pagination, “fixed” is insufficient. Retain the cause of missing orders, a legacy-request fixture spanning more than one page, and the revised API change requirements. Make them discoverable when agents start similar tasks.
 
-When AI claims tests passed, the team should still be able to inspect the commands actually executed, the relevant version and their results. Guardrails check facts.
+**Context** is the information available to the model for the current task. Retained experience can influence execution when it enters that context. Maintaining external experience and tests does not train model parameters. The material still needs to apply to the current task and version.
 
-### 8.3 Memory: Let AI Use Experience the Team Has Retained
+### 8.4 Close the Loop: Test Whether Updates Improve the Next Task
 
-Suppose the team has already experienced an older-client compatibility incident. During the next similar change, AI should have an opportunity to find the record, understand its conditions and use the updated tests and methods.
+An **evaluation** uses explicit criteria and representative tasks to assess system behavior. Retain the compatibility problem as a regression task: after updating documentation, skills or the harness, check whether the agent recognizes default behavior, runs necessary tests and reports results accurately, while watching for regressions elsewhere.
 
-Two concepts need to be distinguished.
+Anthropic's experience also suggests re-examining harness components as models and tasks change. Remove components that are no longer necessary one at a time and observe the effect. Complexity itself is not capability. [^anthropic-harness]
 
-**Context** is the information available to the model during its current reasoning, such as task instructions, code excerpts, tool results and relevant experience. It defines the current input scope. Organizational memory can persist externally and be selected into context when a task requires it. Choosing and maintaining that information is a concern of context engineering. [Anthropic: Effective context engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
-
-**Retrieval-augmented generation (RAG)** combines generation with externally retrieved information. The original research combines a model's parametric knowledge with externally retrievable information. [Lewis et al.: Retrieval-augmented generation](https://arxiv.org/abs/2005.11401)
-
-In a team, retrieval can help AI find incident history and interface conventions. Whether it found the right record, whether that record remains valid and whether it applies to the current version still require checking. Retrievability is one condition for reuse.
-
-Writing experience into a knowledge base or skill file updates external information and execution guidance. It does not mean training the model's parameters. A team can first maintain its methods and experience, then choose how to make them usable.
-
-### 8.4 Close the Loop: Verify That System Updates Help AI
-
-An **evaluation** assesses system performance using explicit criteria and representative tasks. For this example, it can check whether AI preserves API compatibility, runs necessary tests and reports results accurately.
-
-OpenAI's evaluation materials emphasize repeatable datasets and evaluation runs for comparing changes. A team can use selected, organized historical problems as evaluation cases, observing whether changes to skills, tools or context improve behavior while also checking for regressions. [OpenAI: Agent evaluations](https://developers.openai.com/api/docs/guides/agent-evals)
-
-The same loop appears: real tasks expose problems, the team explains their causes, memory, skills or guardrails are updated, and subsequent verification determines whether the update helped.
+The improvement path is unchanged: execution exposes a problem, its cause is explained, memory, methods or checks are revised, and subsequent tasks verify the effect.
 
 ## 9. How an Organization Can Begin
 
@@ -346,23 +395,20 @@ The source's central value is to focus attention on how organizational capabilit
 
 ## References and Their Uses
 
-### Sources Clarifying Concepts in the Original Article
+The primary source supplies the organizational argument; research clarifies its concepts, and engineering sources support the explicitly identified extensions. Source links and their uses are listed below. External materials were checked on October 15, 2026.
 
-- [Haynes et al., 2009: Surgical safety checklist study](https://pubmed.ncbi.nlm.nih.gov/19144931/): checks the study's scope, figures and association-based wording.
-- [Risko and Gilbert, 2016: Cognitive offloading](https://pubmed.ncbi.nlm.nih.gov/27542527/): clarifies the definition of cognitive offloading.
-- [Szulanski, 1996: Transfer of best practices within firms](https://onlinelibrary.wiley.com/doi/10.1002/smj.4250171105): explains internal stickiness and conditions for transferring experience.
-- [ISO 18238:2015 official description](https://www.iso.org/standard/61847.html): checks the scope of closed-loop management for aerospace quality problems. This article does not reproduce the standard's full requirements.
-
-### Sources for the Software and AI Engineering Extensions
-
-- [Google SRE: Postmortem culture](https://sre.google/sre-book/postmortem-culture/): incident records, causal analysis and preventive actions.
-- [Google SRE: Canarying releases](https://sre.google/workbook/canarying-releases/): release risk management.
-- [DORA: Value stream management](https://dora.dev/guides/value-stream-management/): identifying improvement opportunities across the flow of work.
-- [Anthropic: Building effective agents](https://www.anthropic.com/engineering/building-effective-agents): the distinction between agents and predefined workflows, and the role of tools.
-- [Agent Skills overview](https://agentskills.io/home): how agent skills are packaged and used.
-- [OpenAI: Guardrails and approvals](https://developers.openai.com/api/docs/guides/agents/guardrails-approvals): where checks and approvals belong in agent execution.
-- [Anthropic: Effective context engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents): current context and information selection.
-- [Lewis et al., 2020: Retrieval-augmented generation](https://arxiv.org/abs/2005.11401): combining externally retrieved information with model generation.
-- [OpenAI: Agent evaluations](https://developers.openai.com/api/docs/guides/agent-evals): repeatable evaluations for examining changes.
-
-External sources were consulted on October 15, 2026. AI concepts explain general engineering approaches and do not depend on a particular product version.
+[^wan-cogware]: Primary source. The article preserves its sequence of whole, components, feedback loop and organizational application. Development and AI cases are identified extensions.
+[^surgery]: Checks study scope, before-and-after figures and association-based wording; it does not establish the cognitive mechanism of the intervention.
+[^offloading]: Clarifies cognitive offloading as one possible way to explain a checklist's role.
+[^stickiness]: Clarifies obstacles and conditions for transferring experience within firms.
+[^aerospace]: Checks the scope of aerospace quality problem closure; the full standard is not reproduced.
+[^technical-closure]: Distinguishes technical from management closure; only the five technical criteria are expanded here.
+[^postmortem]: Incident records, causal analysis and preventive actions.
+[^canary]: Control versions, version-specific signals and rollout stopping conditions.
+[^compatibility]: Default behavior and backwards compatibility; the order-pagination scenario is hypothetical.
+[^value-stream]: Identifies handoffs, bottlenecks and improvement opportunities in software delivery.
+[^agents]: Distinguishes agents from predefined workflows.
+[^skills]: Explains how agent skills are packaged.
+[^harness-runtime]: Clarifies the boundaries between a harness, session records and execution environment.
+[^openai-harness]: Vendor practice connecting documentation entry points, executable constraints and engineering feedback.
+[^anthropic-harness]: Vendor practice in running-application verification, evaluation limitations and harness simplification.

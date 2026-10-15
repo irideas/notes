@@ -3,7 +3,7 @@ import '../styles/global.css';
 import { ui, prefix, homeUrl, alternatePath, localeFromPath, type Locale } from '../lib/i18n';
 import { getImage } from 'astro:assets';
 import meadow from '../assets/meadow.png';
-interface Props { title?: string; description?: string; image?: string; type?: string; locale?: Locale; }
+interface Props { title?: string; description?: string; image?: string; type?: string; locale?: Locale; markdown?: string; }
 const locale = Astro.props.locale || localeFromPath(Astro.url.pathname);
 const t = ui(locale);
 const { title, description = t.siteDescription, image, type = 'website' } = Astro.props;
@@ -31,6 +31,7 @@ const scenery = await getImage({ src: meadow, width: 1400, format: 'webp', quali
     <link rel="alternate" hreflang="x-default" href={new URL(alternatePath(pagePath, 'zh-CN'), Astro.site)} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate" type="application/rss+xml" title={siteTitle} href={`${prefix(locale)}/rss.xml`} />
+    {Astro.props.markdown && <link rel="alternate" type="text/markdown" href={new URL(Astro.props.markdown, Astro.site)} title={locale === 'en' ? 'Raw Markdown' : 'Markdown 原稿'} />}
     <meta property="og:locale" content={locale === 'en' ? 'en_US' : 'zh_CN'} />
     <meta property="og:locale:alternate" content={locale === 'en' ? 'zh_CN' : 'en_US'} />
     <meta property="og:type" content={type} />

@@ -2,35 +2,47 @@ import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { domainNames } from './lib/domains';
+import { isDate, isInstant, isActor, metadataErrors } from './lib/content-metadata.mjs';
 
-const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(value => {
-  const parsed = new Date(`${value}T00:00:00Z`);
-  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
-}, '日期必须是真实的 YYYY-MM-DD 日期');
+const date = z.string().refine(isDate, '日期必须是真实的 YYYY-MM-DD 字符串');
+const instant = z.string().refine(isInstant, '时间须含秒和明确时区，例如 2026-10-15T18:00:00+08:00');
+const nonempty = z.string().trim().min(1);
+const sourceId = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+const webUrl = z.string().url().refine(value => ['https:', 'http:'].includes(new URL(value).protocol));
 
 const notes = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/notes' }),
+  // This publishing profile is stricter than general OKF conformance.
   schema: ({ image }) => z.object({
-    title: z.string().trim().min(1),
+    type: z.literal('Article'),
+    title: nonempty,
+    language: z.enum(['zh-CN', 'en']),
     date,
-    updated: date.optional(),
+    created_at: instant.optional(),
+    first_recorded_at: instant.optional(),
+    first_recorded_commit: z.string().regex(/^[a-f0-9]{40}$/).optional(),
+    generated: z.object({ by: nonempty.refine(isActor, '编辑者使用 human:id、process:id 或 producer/version'), at: instant }).strict(),
     asOf: date.optional(),
-    description: z.string().trim().min(1),
+    description: nonempty,
     tags: z.array(z.enum(domainNames)).max(2).default([]).refine(tags => new Set(tags).size === tags.length, '领域关键词不能重复'),
-    source: z.object({
-      title: z.string().min(1),
-      author: z.string().min(1),
-      publication: z.string().min(1),
-      date: date.optional(),
-      url: z.string().url().refine(value => ['https:', 'http:'].includes(new URL(value).protocol)),
-    }).optional(),
-    revision: z.string().trim().min(1).optional(),
+    primary_source: sourceId.optional(),
+    sources: z.array(z.object({
+      id: sourceId,
+      resource: webUrl,
+      title: nonempty,
+      author: nonempty.optional(),
+      author_name: nonempty.optional(),
+      publication: nonempty.optional(),
+      published_on: date.optional(),
+    }).strict()).default([]),
+    revision: nonempty.optional(),
     cover: image().optional(),
     coverAlt: z.string().optional(),
     coverCredit: z.string().optional(),
-  }).strict().refine(note => !note.updated || note.updated >= note.date, '更新日期不能早于发布日期')
-    .refine(note => !!note.revision === !!note.updated, '更新日期与修订说明必须成对填写')
-    .refine(note => !note.cover || (!!note.coverAlt?.trim() && !!note.coverCredit?.trim()), '有封面时必须填写替代文本与来源说明'),
+  }).strict().superRefine((note, context) => {
+    for (const message of metadataErrors(note)) context.addIssue({ code: z.ZodIssueCode.custom, message });
+    if (note.cover && (!note.coverAlt?.trim() || !note.coverCredit?.trim())) context.addIssue({ code: z.ZodIssueCode.custom, message: '有封面时必须填写替代文本与来源说明' });
+  }),
 });
 
 export const collections = { notes };

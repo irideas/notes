@@ -9,7 +9,7 @@
 
 | 任务 | 必读 |
 |---|---|
-| 新增或修订文章、来源、领域词、配图 | [内容原则](docs/content/policy.md) → [写作指南](docs/content/authoring.md) |
+| 新增或修订文章、来源、领域词、配图 | [内容原则](docs/content/policy.md) → [写作指南](docs/content/authoring.md) → [文章格式](docs/content/format.md) |
 | 修改页面、样式、构建、检查脚本或依赖 | [开发指南](docs/development/guide.md)；涉及公开文案时加读内容原则 |
 | 提交网站更新并发布、处理部署失败 | [发布指南](docs/operations/deployment.md) |
 | 新文章讨论、评论组件或 GitHub Discussions 关联 | [讨论指南](docs/operations/discussions.md) |
@@ -19,6 +19,7 @@
 
 - 保持现有文章 URL 和首次发布日期稳定。完整解释、来源归属、原文与延伸的区别不能在改写中丢失。
 - 不虚构经历、来源、证据或验证结果。材料和工具不足时说明实际范围，不把未完成事项报告为完成。
+- 以每语完整 Markdown 为唯一内容源，遵循 OKF 发布约定；实质修改更新带时区的元信息。创建、首次 Git 记录、来源发布时间与构建时间不得混用；Raw 由构建生成，不另行维护或提交。
 - 全站提供简体中文与英文。两语正文完整对应，同步更新，切换定位同一页面；保留中文既有 URL。
 - 每篇文章的中英文共用一个固定编号的 Discussion，按讨论指南创建或复用并登记。修订和翻译不另建讨论；普通构建和 PR 检查不建帖。GitHub 只保留一个双语命名的文章讨论分类。
 - DIKW 是内部内容组织原则，不进入站点文案、导航或栏目定义。
