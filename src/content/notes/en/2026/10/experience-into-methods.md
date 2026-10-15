@@ -6,8 +6,8 @@ tags:
 - 组织学习
 - 知识管理
 generated:
-  by: codex/unknown-version
-  at: '2026-10-15T18:33:51+08:00'
+  by: codex/gpt-6.1 sol
+  at: '2026-10-15T18:53:15+08:00'
 sources:
 - id: wan-cogware
   resource: https://www.dedao.cn/course/article?id=Qe6EGjvO7zRKZqoM76XnDrkMLPgAp9

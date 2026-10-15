@@ -27,7 +27,8 @@ export const formatInstant = (instant, language = 'zh-CN') => new Intl.DateTimeF
 }).format(new Date(instant));
 export const rawUrl = id => `https://raw.githubusercontent.com/irideas/notes/main/src/content/notes/${id}.md`;
 export const primarySource = data => data.sources?.[0];
-export const isActor = value => typeof value === 'string' && /^(?:human:[^\s]+|process:[^\s]+|[^\s:/]+\/[^\s/]+)$/.test(value);
+export const isActor = value => typeof value === 'string' && value === value.trim()
+  && /^(?:human:[^\s]+|process:[^\s]+|[^\s:/]+(?:\/[^\r\n/]+)?)$/.test(value);
 export function metadataErrors(data) {
   const sources = data.sources || [];
   return new Set(sources.map(source => source.id)).size === sources.length ? [] : ['Source IDs must be unique'];
