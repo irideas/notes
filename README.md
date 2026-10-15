@@ -30,6 +30,7 @@ npm run dev
 | 元信息、时间、OKF 与 GitHub 原稿 | [文章格式](docs/content/format.md) |
 | 开发网站、预览与检查 | [开发指南](docs/development/guide.md) |
 | 发布、线上核验与恢复 | [发布指南](docs/operations/deployment.md) |
+| SEO、访问来源统计与搜索查询词 | [搜索发现与访问统计](docs/operations/search-and-analytics.md) |
 | 文章评论与双语共用讨论 | [讨论指南](docs/operations/discussions.md) |
 
 ## 维护与使用

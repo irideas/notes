@@ -8,6 +8,7 @@ import config from '../astro.config.mjs';
 import { discussionConfig, discussionFor, validateDiscussions } from '../src/lib/discussions.mjs';
 import { parseDocument, coverFromBody } from '../src/lib/article-source.mjs';
 import { checkArticles } from './check-articles.mjs';
+import { checkSeo } from './check-seo.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = resolve(root, 'dist');
@@ -229,6 +230,7 @@ for (const pathname of ['rss.xml','en/rss.xml','sitemap.xml']) {
   }
 }
 await checkArticles({root,dist,noteRoot,markdown,pages,report});
+await checkSeo({dist,site,pages,report,publicLink});
 if (errors.length) {
   console.error(`Project checks failed (${errors.length}):\n${errors.map(e => `- ${e}`).join('\n')}`);
   process.exitCode = 1;

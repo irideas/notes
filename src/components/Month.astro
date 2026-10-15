@@ -7,5 +7,7 @@ import type { Note } from '../lib/notes';
 interface Props { locale: Locale; month: string; notes: Note[]; }
 const { locale, month, notes } = Astro.props;
 const t = ui(locale);
+const title = monthTitle(month,locale);
+const description = `${title} · ${t.monthlyFirst} ${articleCount(notes.length,locale)}`;
 ---
-<Base locale={locale} title={monthTitle(month,locale)}><div class="shell page-intro"><a class="back-link" href={`${prefix(locale)}/archive/`}>← {t.archiveTitle}</a><h1>{monthTitle(month,locale)}</h1><p class="page-description">{t.monthlyFirst} {articleCount(notes.length,locale)}</p><div class="note-grid">{notes.map(note => <NoteCard note={note} />)}</div></div></Base>
+<Base locale={locale} title={title} description={description}><div class="shell page-intro"><a class="back-link" href={`${prefix(locale)}/archive/`}>← {t.archiveTitle}</a><h1>{title}</h1><p class="page-description">{t.monthlyFirst} {articleCount(notes.length,locale)}</p><div class="note-grid">{notes.map(note => <NoteCard note={note} />)}</div></div></Base>

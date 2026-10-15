@@ -19,6 +19,7 @@ const updatedDisplay = sameDay ? new Intl.DateTimeFormat(locale, { timeZone: 'As
 const schema = {
   '@context': 'https://schema.org', '@type': 'Article',
   headline: note.data.title, description: note.data.description,
+  ...(note.cover && { image: new URL(note.cover.image.src, Astro.site).href }),
   dateModified: note.data.generated.at,
   ...(note.createdAt && { dateCreated: note.createdAt }),
   author: { '@type': 'Person', name: 'irideas', url: 'https://github.com/irideas' },
@@ -31,7 +32,7 @@ const schema = {
   })),
 };
 ---
-<Base locale={locale} title={note.data.title} description={note.data.description} image={note.cover?.image.src} type="article" markdown={rawUrl(note.id)}>
+<Base locale={locale} title={note.data.title} description={note.data.description} image={note.cover?.image} imageAlt={note.cover?.alt} type="article" markdown={rawUrl(note.id)} modifiedAt={note.data.generated.at}>
   <article class="article-shell">
     <header class="article-header">
       <a class="back-link" href={monthUrl(note.month, locale)}>← {monthTitle(note.month, locale)}</a>

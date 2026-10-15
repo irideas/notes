@@ -7,7 +7,7 @@
     "dev": "astro dev --host 127.0.0.1",
     "build": "astro build --force",
     "preview": "astro preview --host 127.0.0.1",
-    "check": "node --test scripts/check-metadata.test.mjs && npm run build && node scripts/check-project.mjs",
+    "check": "node --test scripts/check-metadata.test.mjs scripts/check-analytics.test.mjs && npm run build && node scripts/check-project.mjs",
     "discussion:ensure": "node scripts/discussions.mjs ensure",
     "discussion:check": "node scripts/discussions.mjs check",
     "dev:stop": "astro dev stop",
@@ -24,6 +24,7 @@
     "node": ">=22.12.0"
   },
   "devDependencies": {
+    "fast-xml-parser": "5.11.2",
     "github-slugger": "2.0.0",
     "parse5": "8.0.1",
     "yaml": "2.9.1"

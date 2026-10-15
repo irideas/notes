@@ -5,4 +5,4 @@ interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const t = ui(locale);
 ---
-<Base locale={locale} title={t.notFound}><div class="reading-shell page-intro"><span class="eyebrow">404</span><h1>{t.notFound}</h1><p class="page-description">{t.notFoundDescription}</p><p><a class="read-link" href={homeUrl(locale)}>{t.backHome} ↗</a></p></div></Base>
+<Base locale={locale} title={t.notFound} description={t.notFoundDescription} noindex><div class="reading-shell page-intro"><span class="eyebrow">404</span><h1>{t.notFound}</h1><p class="page-description">{t.notFoundDescription}</p><p><a class="read-link" href={homeUrl(locale)}>{t.backHome} ↗</a></p></div></Base>
