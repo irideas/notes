@@ -1,0 +1,26 @@
+name: Check notes
+on:
+  pull_request:
+  workflow_call:
+    inputs:
+      upload_pages_artifact:
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - name: Upload verified site
+        if: inputs.upload_pages_artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist

@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
     "build": "astro build --force",
-    "preview": "astro preview --host 127.0.0.1"
+    "preview": "astro preview --host 127.0.0.1",
+    "check": "npm run build && node scripts/check-project.mjs",
+    "dev:stop": "astro dev stop",
+    "preview:stop": "astro preview stop"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "0.4.3",
@@ -16,5 +19,11 @@
   },
   "engines": {
     "node": ">=22.12.0"
+  },
+  "devDependencies": {
+    "github-slugger": "2.0.0",
+    "marked": "18.1.1",
+    "parse5": "8.0.1",
+    "yaml": "2.9.1"
   }
 }

@@ -1,4 +1,5 @@
 ---
-import Base from '../layouts/Base.astro';
+import Page from '../components/NotFound.astro';
 ---
-<Base title="页面未找到"><div class="reading-shell page-intro"><span class="eyebrow">404</span><h1>页面未找到</h1><p class="page-description">请检查链接，或通过年月归档查找文章。</p><p><a class="read-link" href="/">返回首页 ↗</a></p></div></Base>
+<Page locale="zh-CN" />
+<script is:inline>if (window.location.pathname.startsWith('/en/') && window.location.pathname !== '/en/404/') window.location.replace('/en/404/');</script>

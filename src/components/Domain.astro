@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import NoteCard from './NoteCard.astro';
+import { domains } from '../lib/domains';
+import { ui, homeUrl, articleCount, type Locale } from '../lib/i18n';
+import type { CollectionEntry } from 'astro:content';
+interface Props { locale: Locale; tag: keyof typeof domains; notes: CollectionEntry<'notes'>[]; }
+const { locale, tag, notes } = Astro.props;
+const t = ui(locale);
+const domain = domains[tag];
+const title = locale === 'en' ? domain.english : tag;
+const description = locale === 'en' ? domain.descriptionEn : domain.description;
+---
+<Base locale={locale} title={title} description={description}><div class="shell page-intro"><a class="back-link" href={homeUrl(locale)}>← {t.allArticles}</a><span class="eyebrow">{t.domains}</span><h1>{title}</h1>{locale === 'zh-CN' && <p class="domain-english">{domain.english}</p>}<p class="page-description">{description} {articleCount(notes.length,locale)}</p><div class="note-grid">{notes.map(note => <NoteCard note={note} />)}</div></div></Base>

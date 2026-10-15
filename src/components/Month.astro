@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro';
+import NoteCard from './NoteCard.astro';
+import { monthTitle } from '../lib/notes';
+import { ui, prefix, articleCount, type Locale } from '../lib/i18n';
+import type { CollectionEntry } from 'astro:content';
+interface Props { locale: Locale; month: string; notes: CollectionEntry<'notes'>[]; }
+const { locale, month, notes } = Astro.props;
+const t = ui(locale);
+---
+<Base locale={locale} title={monthTitle(month,locale)}><div class="shell page-intro"><a class="back-link" href={`${prefix(locale)}/archive/`}>← {t.archiveTitle}</a><h1>{monthTitle(month,locale)}</h1><p class="page-description">{t.monthlyFirst} {articleCount(notes.length,locale)}</p><div class="note-grid">{notes.map(note => <NoteCard note={note} />)}</div></div></Base>

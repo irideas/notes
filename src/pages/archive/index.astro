@@ -1,7 +1,4 @@
 ---
-import Base from '../../layouts/Base.astro';
-import { allNotes, groupedMonths, monthTitle, monthUrl, noteUrl } from '../../lib/notes';
-const notes = await allNotes();
-const months = groupedMonths(notes);
+import Page from '../../components/Archive.astro';
 ---
-<Base title="年月归档" description="按首次发布日期查找文章。"><div class="reading-shell page-intro"><h1>年月归档</h1><p class="page-description">按首次发布日期组织，内容更新保留原有链接。</p>{months.map(({ month, notes }) => <section class="archive-group"><h2><a href={monthUrl(month)}>{monthTitle(month)}</a><span>{notes.length} 篇</span></h2><ol class="archive-list">{notes.map(note => <li><time datetime={note.data.date}>{note.data.date.slice(8)} 日</time><a href={noteUrl(note)}>{note.data.title}<span aria-hidden="true">↗</span></a></li>)}</ol></section>)}</div></Base>
+<Page locale="zh-CN" />

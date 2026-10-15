@@ -1,10 +1,11 @@
 ---
-import Base from '../../layouts/Base.astro';
-import NoteCard from '../../components/NoteCard.astro';
+import Page from '../../components/Domain.astro';
 import { allNotes } from '../../lib/notes';
 import { domains } from '../../lib/domains';
-export async function getStaticPaths() { const notes = await allNotes(); return [...new Set(notes.flatMap(note => note.data.tags))].map(tag => ({ params: { tag }, props: { tag, notes: notes.filter(note => note.data.tags.includes(tag)) } })); }
+export async function getStaticPaths() {
+ const notes = await allNotes('zh-CN');
+ return [...new Set(notes.flatMap(note => note.data.tags))].map(tag => ({params:{tag:tag},props:{tag,notes:notes.filter(note => note.data.tags.includes(tag))}}));
+}
 const { tag, notes } = Astro.props;
-const domain = domains[tag as keyof typeof domains];
 ---
-<Base title={tag} description={domain.description}><div class="shell page-intro"><a class="back-link" href="/">← 全部文章</a><span class="eyebrow">领域关键词</span><h1>{tag}</h1><p class="domain-english">{domain.english}</p><p class="page-description">{domain.description} 共 {notes.length} 篇文章。</p><div class="note-grid">{notes.map(note => <NoteCard note={note} />)}</div></div></Base>
+<Page locale="zh-CN" tag={tag} notes={notes} />

@@ -1,0 +1,21 @@
+name: Content correction / 内容更正
+description: Report a concrete issue and supporting evidence / 提供具体问题与依据
+body:
+  - type: input
+    id: article
+    attributes:
+      label: Article URL / 文章地址
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: Passage and issue / 段落与问题
+      description: Identify the edition and exact passage / 注明语言版本与具体段落
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Suggested correction and evidence / 建议与依据
+      description: Include verifiable sources where available / 有可核验来源时请一并提供

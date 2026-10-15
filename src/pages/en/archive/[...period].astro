@@ -1,0 +1,7 @@
+---
+import Page from '../../../components/Month.astro';
+import { allNotes, groupedMonths } from '../../../lib/notes';
+export async function getStaticPaths() { return groupedMonths(await allNotes('en')).map(({month,notes}) => ({params:{period:month.replace('-', '/')},props:{month,notes}})); }
+const { month, notes } = Astro.props;
+---
+<Page locale="en" month={month} notes={notes} />

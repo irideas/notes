@@ -12,9 +12,9 @@ source:
   publication: 得到 · 万维钢·现代思维工具100讲
   date: '2026-07-09'
   url: https://www.dedao.cn/course/article?id=Qe6EGjvO7zRKZqoM76XnDrkMLPgAp9
-revision: 基于完整报告恢复定义、案例与关系图，补充技能的因果假说、经验编码及经营视角。
+revision: 保留完整定义与案例，加入英文全文，并将封面改为技能、护栏、记忆及向上反馈循环的插画。
 cover: ./experience-into-methods.png
-coverAlt: 淡彩简笔画：一个人铺好可复用的台阶，后来的人沿着台阶继续前进。
+coverAlt: 淡彩插画：绘制方法蓝图、通过量具核查质量、归档经验记录的三个工作场景，由向上回环的路径连接。
 coverCredit: AI 生成插画
 ---
 

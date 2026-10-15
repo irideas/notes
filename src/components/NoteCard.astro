@@ -1,19 +1,23 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
+import { localeOf, ui } from '../lib/i18n';
+import { domains } from '../lib/domains';
 import { displayDate, noteUrl, tagUrl, readingTime } from '../lib/notes';
 interface Props { note: CollectionEntry<'notes'>; featured?: boolean; }
 const { note, featured = false } = Astro.props;
+const locale = localeOf(note.id);
+const t = ui(locale);
 ---
 <article class:list={['note-card', { 'note-card-featured': featured, 'note-card-no-cover': !note.data.cover }]}>
-  {note.data.cover && <a class="note-card-cover" href={noteUrl(note)} aria-label={`阅读：${note.data.title}`}>
+  {note.data.cover && <a class="note-card-cover" href={noteUrl(note)} aria-label={`${t.readLabel}${note.data.title}`}>
     <Image src={note.data.cover} alt={note.data.coverAlt || ''} widths={[480, 760, 1100]} sizes={featured ? '(max-width: 700px) 100vw, 55vw' : '(max-width: 700px) 100vw, 50vw'} width={1100} format="webp" loading={featured ? 'eager' : 'lazy'} />
   </a>}
   <div class="note-card-body">
-    <div class="metadata"><time datetime={note.data.date}>{displayDate(note.data.date)}</time><span>约 {readingTime(note.body)} 分钟</span></div>
+    <div class="metadata"><time datetime={note.data.date}>{displayDate(note.data.date, locale)}</time><span>{t.minutes.replace('{n}', String(readingTime(note.body)))}</span></div>
     <h2><a href={noteUrl(note)}>{note.data.title}</a></h2>
     <p>{note.data.description}</p>
-    {note.data.tags.length > 0 && <div class="labels" aria-label="领域关键词">{note.data.tags.map(tag => <a class="label" href={tagUrl(tag)}>{tag}</a>)}</div>}
-    {featured && <a class="read-link" href={noteUrl(note)}>阅读全文 <span aria-hidden="true">↗</span></a>}
+    {note.data.tags.length > 0 && <div class="labels" aria-label={t.domains}>{note.data.tags.map(tag => <a class="label" href={tagUrl(tag, locale)}>{locale === 'en' ? domains[tag].english : tag}</a>)}</div>}
+    {featured && <a class="read-link" href={noteUrl(note)}>{t.read} <span aria-hidden="true">↗</span></a>}
   </div>
 </article>

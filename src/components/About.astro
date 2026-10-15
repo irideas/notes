@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import { ui, prefix, type Locale } from '../lib/i18n';
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = ui(locale);
+---
+<Base locale={locale} title={t.aboutSite} description={t.aboutDescription}>
+  <div class="reading-shell page-intro"><span class="eyebrow">{t.aboutSite}</span><h1>{t.aboutTitle}</h1><div class="prose">
+    <p>{t.aboutOne}</p><p>{t.aboutTwo}</p><h2>{t.aboutHeading}</h2><p>{t.aboutThree}</p><p>{t.aboutFour}</p>
+    {locale === 'en' ? <p>{t.subscribe} <a href="/en/rss.xml">RSS</a>. {t.viewHistory} <a href="https://github.com/irideas/notes">GitHub</a>, {t.or} <a href="https://github.com/irideas/notes/issues">Issues</a>.</p> : <p>{t.subscribe} <a href="/rss.xml">RSS</a> {t.viewHistory} <a href="https://github.com/irideas/notes">GitHub</a> {t.or} <a href="https://github.com/irideas/notes/issues">Issues</a> 提交更正与补充依据。</p>}
+  </div></div>
+</Base>

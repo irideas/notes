@@ -1,0 +1,10 @@
+---
+import Base from '../layouts/Base.astro';
+import { allNotes, groupedMonths, monthTitle, monthUrl, noteUrl } from '../lib/notes';
+import { ui, articleCount, type Locale } from '../lib/i18n';
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const t = ui(locale);
+const months = groupedMonths(await allNotes(locale));
+---
+<Base locale={locale} title={t.archiveTitle} description={t.archiveDescription}><div class="reading-shell page-intro"><h1>{t.archiveTitle}</h1><p class="page-description">{t.archiveDescription}</p>{months.map(({ month, notes }) => <section class="archive-group"><h2><a href={monthUrl(month,locale)}>{monthTitle(month,locale)}</a><span>{articleCount(notes.length,locale)}</span></h2><ol class="archive-list">{notes.map(note => <li><time datetime={note.data.date}>{note.data.date.slice(8)}{locale === 'zh-CN' ? ' 日' : ''}</time><a href={noteUrl(note)}>{note.data.title}<span aria-hidden="true">↗</span></a></li>)}</ol></section>)}</div></Base>

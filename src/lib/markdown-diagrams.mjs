@@ -14,7 +14,9 @@ export default {
     if (node.lang !== 'mermaid') return;
     const number = (context.data.diagramNumber || 0) + 1;
     context.data.diagramNumber = number;
-    const title = `图 ${number}：${context.data.diagramSection || '关系图'}`;
+    const english = node.meta?.split(/\s+/).includes('en');
+    const title = `${english ? 'Figure' : '图'} ${number}${english ? ': ' : '：'}${context.data.diagramSection || (english ? 'Relationships' : '关系图')}`;
+    const hint = english ? 'Scroll horizontally for wide diagrams' : '宽图可横向滚动';
     let svg = renderMermaidSVG(node.value, {
       bg: 'var(--page)', fg: 'var(--ink)', line: 'var(--muted)',
       accent: 'var(--green)', muted: 'var(--ink)', surface: 'var(--soft)',
@@ -33,7 +35,7 @@ export default {
       .replace('<svg ', `<svg id="${diagramId}" role="img" aria-label="${escapeHtml(title)}" `);
     context.replaceNode(node, {
       type: 'html',
-      value: `<figure class="diagram"><div class="diagram-scroll" role="region" aria-label="${escapeHtml(title)}，宽图可横向滚动" tabindex="0">${svg}</div><figcaption>${escapeHtml(title)}<span class="diagram-hint"> · 宽图可横向滚动</span></figcaption></figure>`,
+      value: `<figure class="diagram"><div class="diagram-scroll" role="region" aria-label="${escapeHtml(title)}; ${hint}" tabindex="0">${svg}</div><figcaption>${escapeHtml(title)}<span class="diagram-hint"> · ${hint}</span></figcaption></figure>`,
     });
   },
 };
