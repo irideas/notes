@@ -48,8 +48,11 @@ export async function checkSeo({ dist, site, pages, report, publicLink }) {
       const config = JSON.parse(text(configTag?.node || {}));
       if (config.token !== analytics.cloudflareToken || config.productionOrigin !== site.origin || config.enabled !== !isError) report(file, 'Cloudflare analytics configuration differs from site settings');
     } catch { report(file, 'Invalid Cloudflare analytics configuration'); }
-    const verification = page.tags.filter(t => t.name === 'meta' && t.a.name === 'google-site-verification');
-    if (google.siteVerification ? verification.length !== 1 || verification[0].a.content !== google.siteVerification : verification.length) report(file, 'Search Console verification differs from configuration');
+    for (const [name, value] of [['google-site-verification', google.siteVerification], ['msvalidate.01', google.bingSiteVerification]]) {
+      const verification = page.tags.filter(t => t.name === 'meta' && t.a.name === name);
+      const expected = new URL(page.canonical).pathname === '/' && value;
+      if (expected ? verification.length !== 1 || verification[0].a.content !== expected || verification[0].node.parentNode?.tagName !== 'head' : verification.length) report(file, `${name} must match configuration and appear once in the root homepage head only`);
+    }
     if (isError) {
       if (one(robotTags, '404 robots tag')?.a.content !== 'noindex, follow') report(file, '404 must be noindex, follow');
     } else {

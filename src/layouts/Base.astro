@@ -28,7 +28,10 @@ const scenery = await getImage({ src: meadow, width: 1400, format: 'webp', quali
     <meta name="theme-color" content="#f7f8f3" />
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex, follow" />}
-    {google.siteVerification && <meta name="google-site-verification" content={google.siteVerification} />}
+    {current === '/' && <>
+      {google.siteVerification && <meta name="google-site-verification" content={google.siteVerification} />}
+      {google.bingSiteVerification && <meta name="msvalidate.01" content={google.bingSiteVerification} />}
+    </>}
     <title>{pageTitle}</title>
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang={locale} href={canonical} />
