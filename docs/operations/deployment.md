@@ -52,7 +52,7 @@ gh run list --repo irideas/notes --workflow deploy.yml --limit 5 --json database
 
 域名、Pages 设置和 DNS 属于外部配置，改动前读取当前状态。日常写作和网站更新不需要改 DNS 或另建托管服务。站点地址调整时同时核对规范地址、RSS、sitemap 和爬虫配置。
 
-SEO、GA4 与站长平台验证配置见 [搜索发现与访问统计](search-and-analytics.md)。统计改动发布前核验两语同意、拒绝、撤回和零请求行为；发布后另外确认 GA 实时报告及 Search Console 的实际验证与提交状态，不能把构建成功等同于统计或收录完成。
+SEO 与站长平台验证配置见 [搜索发现与访问统计](search-and-analytics.md)。
 
 ## 失败处理与恢复
 

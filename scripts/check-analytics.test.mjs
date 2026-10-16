@@ -1,101 +1,53 @@
 import { test, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { initializeAnalytics } from '../src/lib/analytics-consent.mjs';
-import { google } from '../src/lib/google.mjs';
+import { initializeAnalytics } from '../src/lib/analytics.mjs';
+import analytics from '../src/data/analytics.json' with { type: 'json' };
 
-const key = 'notes.analytics-consent';
-const id = google.measurementId || 'G-TESTONLY'; // Mock DOM only; no network requests.
-const origin = 'https://notes.irideas.pro';
-function browser({ choice = null, preview = false, storageBlocked = false, panelPresent = true } = {}) {
-  const element = () => ({ hidden: true, events: {}, addEventListener(event, fn) { this.events[event] = fn; }, focus() {} });
-  const settings = element(), accept = element(), deny = element(), panel = element();
-  panel.dataset = { measurementId: id, productionOrigin: origin };
-  panel.querySelector = selector => selector.includes('accept') ? accept : selector.includes('deny') ? deny : null;
-  const scripts = [], cookies = [], stored = new Map(choice ? [[key, choice]] : []);
-  let reloads = 0;
+const config = { token: analytics.cloudflareToken, productionOrigin: 'https://notes.irideas.pro', enabled: true };
+function browser({ preview = false, storageBlocked = false, cookiesBlocked = false } = {}) {
+  const scripts = [], removals = [], cookieWrites = [];
+  const stored = new Map([['notes.analytics-consent', 'granted'], ['reader-preference', 'keep']]);
+  globalThis.window = { location: { origin: preview ? 'http://localhost:4321' : config.productionOrigin, hostname: preview ? 'localhost' : 'notes.irideas.pro' } };
+  globalThis.localStorage = { removeItem(name) { if (storageBlocked) throw Error('blocked'); removals.push(name); stored.delete(name); } };
   globalThis.document = {
-    getElementById: () => panelPresent ? panel : null,
-    querySelector: () => settings,
-    createElement: () => ({}),
+    querySelector: () => scripts[0] || null,
+    createElement: () => ({ attributes: {}, setAttribute(name, value) { this.attributes[name] = value; } }),
     head: { appendChild: script => scripts.push(script) },
-    set cookie(value) { cookies.push(value); },
+    set cookie(value) { if (cookiesBlocked) throw Error('blocked'); cookieWrites.push(value); },
   };
-  globalThis.localStorage = {
-    getItem: name => { if (storageBlocked) throw Error('blocked'); return stored.get(name) || null; },
-    setItem: (name, value) => { if (storageBlocked) throw Error('blocked'); stored.set(name, value); },
-  };
-  globalThis.window = {
-    location: { origin: preview ? 'http://localhost:4321' : origin, hostname: 'notes.irideas.pro', reload: () => reloads++ },
-    events: {}, addEventListener(event, fn) { this.events[event] = fn; },
-  };
-  initializeAnalytics();
-  return { panel, settings, accept: () => accept.events.click(), deny: () => deny.events.click(), scripts, cookies, stored, reloads: () => reloads, commands: () => (window.dataLayer || []).map(args => [...args]) };
+  return { scripts, removals, cookieWrites, stored };
 }
-afterEach(() => { delete globalThis.document; delete globalThis.window; delete globalThis.localStorage; });
+afterEach(() => { delete globalThis.window; delete globalThis.document; delete globalThis.localStorage; });
 
-test('fresh visit and refusal never load Google or queue events', () => {
+test('production loads the supplied Cloudflare module once without Google', () => {
   const b = browser();
-  assert.equal(b.panel.hidden, false);
-  assert.equal(b.settings.hidden, false);
-  assert.deepEqual(b.scripts, []);
-  assert.deepEqual(b.commands(), []);
-  b.deny();
-  assert.equal(b.stored.get(key), 'denied');
-  assert.equal(b.panel.hidden, true);
-  assert.deepEqual(b.scripts, []);
-  assert.deepEqual(b.commands(), []);
-  assert.equal(b.reloads(), 0);
-});
-test('consent loads one tag with denied advertising and no account identity', () => {
-  const b = browser();
-  b.accept(); b.accept();
+  initializeAnalytics(config); initializeAnalytics(config);
   assert.equal(b.scripts.length, 1);
-  assert.equal(b.scripts[0].src, `https://www.googletagmanager.com/gtag/js?id=${id}`);
-  assert.equal(b.scripts[0].async, true);
-  const [defaults, update, js, config] = b.commands();
-  assert.deepEqual(defaults, ['consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied' }]);
-  assert.deepEqual(update, ['consent', 'update', { ...defaults[2], analytics_storage: 'granted' }]);
-  assert.equal(js[0], 'js');
-  assert.deepEqual(config, ['config', id, { allow_google_signals: false, allow_ad_personalization_signals: false, cookie_domain: 'notes.irideas.pro' }]);
-  assert.equal(b.stored.get(key), 'granted');
+  assert.equal(b.scripts[0].type, 'module');
+  assert.equal(b.scripts[0].src, 'https://static.cloudflareinsights.com/beacon.min.js');
+  assert.deepEqual(JSON.parse(b.scripts[0].attributes['data-cf-beacon']), { token: '72bb064081db4bce85c92ce54a4ce391' });
+  assert.equal(window.gtag, undefined);
+  assert.equal(window.dataLayer, undefined);
 });
-test('saved refusal stays blocked and can be changed to consent', () => {
-  const b = browser({ choice: 'denied' });
-  assert.equal(b.panel.hidden, true);
+test('migration removes only this project’s old choice and exact root cookies', () => {
+  const b = browser(); initializeAnalytics(config);
+  assert.deepEqual(b.removals, ['notes.analytics-consent']);
+  assert.deepEqual([...b.stored], [['reader-preference', 'keep']]);
+  assert.deepEqual(b.cookieWrites, [
+    '_ga=; Max-Age=0; path=/', '_ga=; Max-Age=0; path=/; domain=notes.irideas.pro',
+    '_ga_33MD6529TF=; Max-Age=0; path=/', '_ga_33MD6529TF=; Max-Age=0; path=/; domain=notes.irideas.pro',
+  ]);
+});
+test('preview origin neither loads a beacon nor touches storage', () => {
+  const b = browser({ preview: true }); initializeAnalytics(config);
+  assert.deepEqual(b.scripts, []); assert.deepEqual(b.removals, []); assert.deepEqual(b.cookieWrites, []);
+});
+test('404 still cleans retired storage without counting a visit', () => {
+  const b = browser(); initializeAnalytics({ ...config, enabled: false });
   assert.equal(b.scripts.length, 0);
-  b.settings.events.click();
-  assert.equal(b.panel.hidden, false);
-  b.deny(); b.settings.events.click(); b.accept();
-  assert.equal(window['ga-disable-' + id], false);
+  assert.deepEqual(b.removals, ['notes.analytics-consent']);
+});
+test('blocked local storage or cookies do not break beacon loading', () => {
+  const b = browser({ storageBlocked: true, cookiesBlocked: true }); initializeAnalytics(config);
   assert.equal(b.scripts.length, 1);
-});
-test('withdrawal disables collection, clears cookies and reloads without denied-mode pings', () => {
-  const b = browser({ choice: 'granted' });
-  const count = b.commands().length;
-  b.settings.events.click(); b.deny();
-  assert.equal(window['ga-disable-' + id], true);
-  assert.equal(b.stored.get(key), 'denied');
-  assert.equal(b.reloads(), 1);
-  assert.equal(b.commands().length, count);
-  assert.ok(b.cookies.some(value => value.startsWith('_ga=; Max-Age=0;')));
-  assert.ok(b.cookies.some(value => value.startsWith(`_ga_${id.slice(2)}=; Max-Age=0;`)));
-});
-test('withdrawal or cleared preferences in another tab stops collection', () => {
-  const b = browser({ choice: 'granted' });
-  b.stored.delete(key);
-  window.events.storage({ key: null });
-  assert.equal(window['ga-disable-' + id], true);
-  assert.equal(b.reloads(), 1);
-});
-test('blocked browser storage defaults to no collection and still permits an explicit choice', () => {
-  const b = browser({ storageBlocked: true });
-  assert.equal(b.scripts.length, 0);
-  b.deny();
-  assert.equal(b.scripts.length, 0);
-  b.accept();
-  assert.equal(b.scripts.length, 1);
-});
-test('preview hosts and pages without analytics controls cannot start collection', () => {
-  assert.equal(browser({ preview: true, choice: 'granted' }).scripts.length, 0);
-  assert.equal(browser({ panelPresent: false, choice: 'granted' }).scripts.length, 0);
 });

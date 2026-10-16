@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { XMLParser, XMLValidator } from 'fast-xml-parser';
 import { google } from '../src/lib/google.mjs';
+import analytics from '../src/data/analytics.json' with { type: 'json' };
 
 const text = node => node.nodeName === '#text' ? node.value : (node.childNodes || []).map(text).join('');
 export async function checkSeo({ dist, site, pages, report, publicLink }) {
@@ -39,11 +40,14 @@ export async function checkSeo({ dist, site, pages, report, publicLink }) {
     const isError = /\/(?:en\/)?404(?:\.html|\/)$/.test(new URL(page.canonical).pathname);
     const consent = page.tags.filter(t => t.a.id === 'analytics-consent');
     const settings = page.tags.filter(t => 'data-analytics-settings' in t.a);
-    if (google.measurementId && !isError) {
-      if (consent.length !== 1 || consent[0].a['data-measurement-id'] !== google.measurementId || consent[0].a['data-production-origin'] !== site.origin) report(file, 'Missing configured analytics consent control');
-      if (settings.length !== 1) report(file, 'Missing analytics settings / withdrawal control');
-    } else if (consent.length || settings.length) report(file, 'Analytics controls must be absent when disabled or on 404');
-    if (page.tags.some(t => ['script', 'link', 'iframe', 'img'].includes(t.name) && /(?:googletagmanager|google-analytics)\.com/.test(t.a.src || t.a.href || ''))) report(file, 'Google must not be loaded or preconnected before consent');
+    if (consent.length || settings.length) report(file, 'Retired analytics consent controls must be absent');
+    if (page.tags.some(t => ['script', 'link', 'iframe', 'img'].includes(t.name) && /(?:googletagmanager|google-analytics)\.com/.test(t.a.src || t.a.href || ''))) report(file, 'Retired Google Analytics must not be loaded');
+    if (page.tags.some(t => t.name === 'script' && /googletagmanager|google-analytics\.com|dataLayer|\bgtag\s*\(/.test(text(t.node)))) report(file, 'Retired Google Analytics initialization remains');
+    const configTag = one(page.tags.filter(t => t.name === 'script' && t.a.id === 'web-analytics-config' && t.a.type === 'application/json'), 'Cloudflare analytics configuration');
+    try {
+      const config = JSON.parse(text(configTag?.node || {}));
+      if (config.token !== analytics.cloudflareToken || config.productionOrigin !== site.origin || config.enabled !== !isError) report(file, 'Cloudflare analytics configuration differs from site settings');
+    } catch { report(file, 'Invalid Cloudflare analytics configuration'); }
     const verification = page.tags.filter(t => t.name === 'meta' && t.a.name === 'google-site-verification');
     if (google.siteVerification ? verification.length !== 1 || verification[0].a.content !== google.siteVerification : verification.length) report(file, 'Search Console verification differs from configuration');
     if (isError) {
@@ -70,7 +74,7 @@ export async function checkSeo({ dist, site, pages, report, publicLink }) {
       const website = one(json.filter(s => s['@type'] === 'WebSite'), 'WebSite JSON-LD');
       if (!website?.name?.trim() || !website?.alternateName?.trim() || website?.url !== site.href) report(file, 'WebSite must name the site and its root homepage');
     }
-    if (google.measurementId && ['/about/', '/en/about/'].includes(new URL(page.canonical).pathname) && !page.ids.has('analytics-privacy')) report(file, 'Missing same-language analytics privacy disclosure');
+    if (page.ids.has('analytics-privacy')) report(file, 'Removed analytics privacy section must stay absent');
   }
   const robotsFile = resolve(dist, 'robots.txt');
   const robots = await readFile(robotsFile, 'utf8').catch(() => '');
