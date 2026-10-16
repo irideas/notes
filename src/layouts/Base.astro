@@ -4,7 +4,7 @@ import { ui, prefix, homeUrl, alternatePath, localeFromPath, type Locale } from 
 import { getImage } from 'astro:assets';
 import meadow from '../assets/meadow.png';
 import type { ImageMetadata } from 'astro';
-import GoogleAnalytics from '../components/GoogleAnalytics.astro';
+import CloudflareAnalytics from '../components/CloudflareAnalytics.astro';
 import { google } from '../lib/google.mjs';
 interface Props { title?: string; description?: string; image?: ImageMetadata; imageAlt?: string; type?: string; locale?: Locale; markdown?: string; noindex?: boolean; modifiedAt?: string; }
 const locale = Astro.props.locale || localeFromPath(Astro.url.pathname);
@@ -67,13 +67,11 @@ const scenery = await getImage({ src: meadow, width: 1400, format: 'webp', quali
       </nav>
     </header>
     <main id="main"><slot /></main>
-    <footer class="site-footer shell"><p>{t.footer}</p><div>{google.measurementId && !noindex && <button class="analytics-settings" type="button" data-analytics-settings hidden>{t.analyticsSettings}</button>}<a href={`${prefix(locale)}/rss.xml`}>RSS</a><a href="https://github.com/irideas/notes" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></footer>
-    {!noindex && <GoogleAnalytics locale={locale} />}
+    <footer class="site-footer shell"><p>{t.footer}</p><div><a href={`${prefix(locale)}/rss.xml`}>RSS</a><a href="https://github.com/irideas/notes" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></footer>
+    <CloudflareAnalytics enabled={!noindex} />
   </body>
 </html>
 <style>
   .site-footer{flex-wrap:wrap}
   .site-footer>div{flex-wrap:wrap;align-items:center}
-  .analytics-settings{padding:0;border:0;background:none;cursor:pointer;font:inherit}
-  .analytics-settings:hover{color:var(--green)}
 </style>
