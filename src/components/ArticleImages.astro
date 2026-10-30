@@ -1,0 +1,71 @@
+---
+import { ui, type Locale } from '../lib/i18n';
+const { locale } = Astro.props as { locale: Locale };
+const t = ui(locale);
+---
+<dialog class="image-viewer" aria-label={t.imagePreview} data-open-label={t.imageOpen}>
+  <div class="image-viewer-toolbar">
+    <button type="button" class="image-viewer-size" aria-pressed="false" data-fit={t.imageFit} data-full={t.imageFull}>{t.imageFull}</button>
+    <form method="dialog"><button type="submit">{t.imageClose}</button></form>
+  </div>
+  <div class="image-viewer-canvas" tabindex="0" aria-label={t.imagePreview}>
+    <img alt={t.imagePreview} />
+  </div>
+</dialog>
+<script>
+  const viewer = document.querySelector<HTMLDialogElement>('.image-viewer');
+  if (viewer) {
+    const image = viewer.querySelector<HTMLImageElement>('img')!;
+    const canvas = viewer.querySelector<HTMLElement>('.image-viewer-canvas')!;
+    const size = viewer.querySelector<HTMLButtonElement>('.image-viewer-size')!;
+    let opener: HTMLButtonElement | undefined;
+    const fit = () => {
+      canvas.dataset.zoomed = 'false';
+      size.setAttribute('aria-pressed', 'false');
+      size.textContent = size.dataset.full!;
+    };
+    for (const source of document.querySelectorAll<HTMLImageElement>('.prose img')) {
+      if (source.closest('a, button')) continue;
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'article-image-open';
+      button.setAttribute('aria-haspopup', 'dialog');
+      button.setAttribute('aria-label', `${viewer.dataset.openLabel}: ${source.title || source.alt}`);
+      source.before(button);
+      button.append(source);
+      button.addEventListener('click', () => {
+        opener = button;
+        image.src = source.currentSrc || source.src;
+        image.alt = source.alt;
+        fit();
+        viewer.showModal();
+        canvas.scrollTo(0, 0);
+      });
+    }
+    size.addEventListener('click', () => {
+      const zoomed = canvas.dataset.zoomed !== 'true';
+      canvas.dataset.zoomed = String(zoomed);
+      size.setAttribute('aria-pressed', String(zoomed));
+      size.textContent = zoomed ? size.dataset.fit! : size.dataset.full!;
+    });
+    viewer.addEventListener('click', event => {
+      if (event.target !== viewer) return;
+      const rect = viewer.getBoundingClientRect();
+      if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) viewer.close();
+    });
+    viewer.addEventListener('close', () => opener?.focus({ preventScroll: true }));
+  }
+</script>
+<style>
+  :global(.article-image-open){display:block;width:100%;padding:0;border:0;border-radius:8px;background:transparent;cursor:zoom-in;text-align:inherit}
+  :global(.article-image-open img){width:100%;margin:0}
+  .image-viewer{width:min(1400px,calc(100vw - 28px));max-width:calc(100vw - 28px);max-height:calc(100dvh - 28px);padding:0;border:1px solid #d8e2ed;border-radius:12px;background:#fff;color:#183650;box-shadow:0 15px 60px #122d4b33}
+  .image-viewer::backdrop{background:#102944c9}
+  .image-viewer-toolbar{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:10px 14px;border-bottom:1px solid #e0e7ef;background:#fff}
+  .image-viewer-toolbar form{margin:0}
+  .image-viewer-toolbar button{padding:6px 13px;border:1px solid #cddbe8;border-radius:6px;background:#f3f8fd;color:#183650;cursor:pointer;font-size:13px}
+  .image-viewer-canvas{max-height:calc(100dvh - 100px);overflow:auto;overscroll-behavior:contain;padding:12px}
+  .image-viewer-canvas img{display:block;width:auto;max-width:100%;height:auto;margin:auto;border-radius:0}
+  .image-viewer-canvas[data-zoomed=true] img{max-width:none}
+  :global(html:has(.image-viewer[open])){overflow:hidden}
+</style>

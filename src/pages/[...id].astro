@@ -3,6 +3,7 @@ import { render } from 'astro:content';
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Comments from '../components/Comments.astro';
+import ArticleImages from '../components/ArticleImages.astro';
 import { localeOf, ui, homeUrl } from '../lib/i18n';
 import { domains } from '../lib/domains';
 import { allNotes, monthTitle, monthUrl, readingTime, tagUrl } from '../lib/notes';
@@ -51,6 +52,7 @@ const schema = {
       {sections.length > 1 && <aside class="article-sidebar"><details class="article-toc" open><summary aria-label={t.toc}><svg class="toc-button-icon" viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M6 5h11M6 10h11M6 15h11M2 5h1M2 10h1M2 15h1" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /></svg><span class="toc-desktop-label">{t.toc}</span><span class="toc-mobile-label">{t.tocButton}</span></summary><nav aria-label={t.toc}><ol>{sections.map(section => <li><a href={`#${section.slug}`}>{section.text}</a></li>)}</ol></nav></details></aside>}
       <div class="article-main">
         <div class="prose"><Content /></div>
+        <ArticleImages locale={locale} />
         <footer class="article-end">
           <div><p>{t.compiled}</p></div>
           <div class="article-links"><a href={rawUrl(note.id)}>{t.markdown}</a><a href={`https://github.com/irideas/notes/issues/new?template=content-correction.yml&title=${encodeURIComponent(`${t.correctionTitle}${note.data.title}`)}`}>{t.correction}</a><a href={homeUrl(locale)}>{t.allArticles} ↗</a></div>

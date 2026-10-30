@@ -1,0 +1,99 @@
+{
+  "tool": "image_gen",
+  "scope": "Private review editions of eight course figures; Chinese and English",
+  "reference": "https://www.dedao.cn/course/article?id=Qe6EGjvO7zRKZqoM76XnDrkMLPgAp9",
+  "sourceFigures": [
+    {
+      "name": "01-company",
+      "resource": "https://piccdn2.umiwi.com/uploader/image/ddarticle/2026070918/1915119201032507312/070918.png"
+    },
+    {
+      "name": "02-closure",
+      "resource": "https://piccdn2.umiwi.com/uploader/image/ddarticle/2026070918/1915119237544972208/070918.png"
+    },
+    {
+      "name": "03-evolution",
+      "resource": "https://piccdn2.umiwi.com/uploader/image/ddarticle/2026070918/1915119265455969000/070918.png"
+    },
+    {
+      "name": "04-lifecycle",
+      "resource": "https://piccdn2.umiwi.com/uploader/image/ddarticle/2026070918/1915119299815707368/070918.png"
+    },
+    {
+      "name": "05-sales",
+      "resource": "https://piccdn2.umiwi.com/uploader/image/ddarticle/2026070918/1915119340619993008/070918.png"
+    },
+    {
+      "name": "06-team",
+      "resource": "https://piccdn2.umiwi.com/uploader/image/ddarticle/2026070918/1915119370684764904/070918.png"
+    },
+    {
+      "name": "07-organization",
+      "resource": "https://piccdn2.umiwi.com/uploader/image/ddarticle/2026070918/1915119403968663472/070918.png"
+    },
+    {
+      "name": "08-overview",
+      "resource": "https://piccdn2.umiwi.com/uploader/image/ddarticle/2026070918/1915119451216475464/070918.png"
+    }
+  ],
+  "chinesePrompts": [
+    {
+      "key": "zh-01",
+      "prompt": "Use case: scientific-educational / text-localization. Edit the attached source course image into a carefully typeset SIMPLIFIED CHINESE article figure. Preserve the source's meaningful layout, hierarchy, original scene/panel count and arrow relationships; improve clarity, not conceptual scope. Colors: rich professional navy and blue, vivid coral and gold on clean white, bright and lively comic scenes when present, absolutely no sage-green monochrome theme. All text must be affirmative definitions or factual scene labels. No editorial chatter. Use the supplied exact Chinese copy, fitting labels with excellent spacing; line breaks can be adjusted for readability. Exact content: 保持三列整体与下方三个组成的原有布局。文字：公司是一台用人运行的智能体；智件(Cogware)：组织积累的方法、标准与经验；顶端：公司；第二层三框：人／判断·创造·责任／成员更替，能力接续；制度／权责利·激励约束／组织有序协作；智件／方法·标准·经验／积累共同能力。只从智件框连到下一层三个框：技能(Skill)／稳定行动／将意图转化为可重复的方法／流程·SOP·Playbook；护栏(Guardrail)／关键核查／在重要行动节点确认要求／清单·标准·红线·评审；记忆(Memory)／经验积累／让经验进入后续工作／最佳实践·失败案例·复盘。底部一句：制度协调协作，智件沉淀能力。三层从属关系明确，人的框与制度框没有指向三个组成的分解线。 Output one full image. Do not invent facts, components, extra arrows or scenes. Keep adult professional characters where present. Typography must be crisp and accurate. This is an edited course figure; retain a discreet source credit.",
+      "reference": "29093a25ce0afa39.png"
+    },
+    {
+      "key": "zh-02",
+      "prompt": "Use case: scientific-educational / text-localization. Edit the attached source course image into a carefully typeset SIMPLIFIED CHINESE article figure. Preserve the source's meaningful layout, hierarchy, original scene/panel count and arrow relationships; improve clarity, not conceptual scope. Colors: rich professional navy and blue, vivid coral and gold on clean white, bright and lively comic scenes when present, absolutely no sage-green monochrome theme. All text must be affirmative definitions or factual scene labels. No editorial chatter. Use the supplied exact Chinese copy, fitting labels with excellent spacing; line breaks can be adjusted for readability. Exact content: 保持上方横向五节点、下方分三组的布局。文字：归零：从一次故障到系统改进；质量问题（无论大小）→定位准确→机理清楚→问题复现→措施有效；前四项：查清当前问题，验证纠正效果；第五项：举一反三，排查并更新相关系统；下方三组：同类设计／逐项检查，落实改进；同类工艺／逐项检查，落实改进；同类环节／逐项检查，落实改进。底部：经验进入方法与核查，改进覆盖相关系统。页脚时间：1996 长征三号乙首飞失利 → 持续分析、试验与改进 → 2015 ISO 18238 发布。不要自称原创方法，不要增加因果保证。 Output one full image. Do not invent facts, components, extra arrows or scenes. Keep adult professional characters where present. Typography must be crisp and accurate. This is an edited course figure; retain a discreet source credit.",
+      "reference": "d8bd31fcf88b69be.png"
+    },
+    {
+      "key": "zh-03",
+      "prompt": "Use case: scientific-educational / text-localization. Edit the attached source course image into a carefully typeset SIMPLIFIED CHINESE article figure. Preserve the source's meaningful layout, hierarchy, original scene/panel count and arrow relationships; improve clarity, not conceptual scope. Colors: rich professional navy and blue, vivid coral and gold on clean white, bright and lively comic scenes when present, absolutely no sage-green monochrome theme. All text must be affirmative definitions or factual scene labels. No editorial chatter. Use the supplied exact Chinese copy, fitting labels with excellent spacing; line breaks can be adjusted for readability. Exact content: 保持原有三节点横向与下方单个弧线回流的布局，三框从左至右改用明亮珊瑚红、金黄、天蓝。文字：变异／创新·新尝试／Variation；选择／小范围实验／Selection；保留／记忆→技能→护栏／Retention；弧线文字：结果回流，推动下一轮改进。只保留这三框两条前进箭头与一条回流弧线，线条清楚无交叉。 Output one full image. Do not invent facts, components, extra arrows or scenes. Keep adult professional characters where present. Typography must be crisp and accurate. This is an edited course figure; retain a discreet source credit.",
+      "reference": "544f0429393d0e86.png"
+    },
+    {
+      "key": "zh-04",
+      "prompt": "Use case: scientific-educational / text-localization. Edit the attached source course image into a carefully typeset SIMPLIFIED CHINESE article figure. Preserve the source's meaningful layout, hierarchy, original scene/panel count and arrow relationships; improve clarity, not conceptual scope. Colors: rich professional navy and blue, vivid coral and gold on clean white, bright and lively comic scenes when present, absolutely no sage-green monochrome theme. All text must be affirmative definitions or factual scene labels. No editorial chatter. Use the supplied exact Chinese copy, fitting labels with excellent spacing; line breaks can be adjusted for readability. Exact content: 保持六节点环形布局：1顶部，2右上，3右下，4底部，5左下，6左上。顺时针箭头顺序1→2→3→4→5→6→1。标题：好方法的一生；副题：技能、护栏与记忆相互回写。节点：①个人发现／产生候选方法；②小范围实验／区分方法、个人与适用条件；③写入记忆／机制·前提·边界；④固化成技能／SOP·模板·培训；⑤建立护栏／关键错误形成核查；⑥结果回写／分析成败，修订方法。2→3箭头：验证有效；3→4箭头：反复有效；5→6箭头：继续执行。中心：让好方法成为组织能力／变异→选择→保留。顶部1的右侧保留一条虚线风险支路：仅随个人保存→人员离开时经验流失。底部：每次执行，继续检验与改进。每条线无交叉无跳线。 Output one full image. Do not invent facts, components, extra arrows or scenes. Keep adult professional characters where present. Typography must be crisp and accurate. This is an edited course figure; retain a discreet source credit.",
+      "reference": "3635ace0f3655310.png"
+    },
+    {
+      "key": "zh-05",
+      "prompt": "Use case: scientific-educational / text-localization. Edit the attached source course image into a carefully typeset SIMPLIFIED CHINESE article figure. Preserve the source's meaningful layout, hierarchy, original scene/panel count and arrow relationships; improve clarity, not conceptual scope. Colors: rich professional navy and blue, vivid coral and gold on clean white, bright and lively comic scenes when present, absolutely no sage-green monochrome theme. All text must be affirmative definitions or factual scene labels. No editorial chatter. Use the supplied exact Chinese copy, fitting labels with excellent spacing; line breaks can be adjusted for readability. Exact content: 保持七格漫画的所有人物与行动及场景，保留原始布局与鲜活彩色。中文标题：高手走了以后。第1格气泡：先算账。白板标出两种明确指标：现状年损失300万元；方案年节省120万元。纵轴单位：万元；刻度0、100、200、300。让红柱明确为损失、绿柱明确为节省，二者分别标签，保留销售与客户互动。第2格：一个好方法／签单成功！ 第3格：高手离开后，方法怎样接续？ 第4格：先实验／换人、换客户，看结果／试一次→看数据→作判断。第5格：记忆：机制·前提·边界；本子三栏：机制（逻辑、步骤、关键点）、前提（客户画像、适用场景、资源条件）、边界（适用范围、风险点、例外处理）。第6格：技能＋护栏；材料：开场话术、异议应对、价值呈现；清单：客户情况清楚、损失测算有据、收益估算验证、下一步已明确；右侧要求：收益承诺有证据、报价遵守授权、关键信息留存、风险评估在前。第7格：方法可传承，团队能接续。底部署名：万维钢·现代思维工具（据课程漫画调整）。人物成年专业，避免幼稚符号，中文可读。 Output one full image. Do not invent facts, components, extra arrows or scenes. Keep adult professional characters where present. Typography must be crisp and accurate. This is an edited course figure; retain a discreet source credit.",
+      "reference": "81bb9155bc865915.png"
+    },
+    {
+      "key": "zh-06",
+      "prompt": "Use case: scientific-educational / text-localization. Edit the attached source course image into a carefully typeset SIMPLIFIED CHINESE article figure. Preserve the source's meaningful layout, hierarchy, original scene/panel count and arrow relationships; improve clarity, not conceptual scope. Colors: rich professional navy and blue, vivid coral and gold on clean white, bright and lively comic scenes when present, absolutely no sage-green monochrome theme. All text must be affirmative definitions or factual scene labels. No editorial chatter. Use the supplied exact Chinese copy, fitting labels with excellent spacing; line breaks can be adjusted for readability. Exact content: 保持原有六格漫画布局人物行动、出行负责人、团队、项目看板、发布按钮、经验记录等所有核心物件，保留鲜活颜色。标题：老板不在的一天。第1格：老板出差，工作继续。第2格：协作需要清楚的安排（保留团队等待与疑问的场景）；第3格binder：智件；三个tab：技能、护栏、记忆；tab色蓝、珊瑚红、金黄。第4格：技能：明确路径与交接；看板：需求→设计→开发→测试→上线。第5格：护栏：先确认，再行动；清单：需求明确、影响评估、回滚方案；大按钮：上线。第6格：记忆：保存经验，持续改进。底部横幅：方法支持协作，经验推动成长。页脚署名：万维钢·现代思维工具（据课程漫画调整）。 Output one full image. Do not invent facts, components, extra arrows or scenes. Keep adult professional characters where present. Typography must be crisp and accurate. This is an edited course figure; retain a discreet source credit.",
+      "reference": "3b7c9a95292e7845.png"
+    },
+    {
+      "key": "zh-07",
+      "prompt": "Use case: scientific-educational / text-localization. Edit the attached source course image into a carefully typeset SIMPLIFIED CHINESE article figure. Preserve the source's meaningful layout, hierarchy, original scene/panel count and arrow relationships; improve clarity, not conceptual scope. Colors: rich professional navy and blue, vivid coral and gold on clean white, bright and lively comic scenes when present, absolutely no sage-green monochrome theme. All text must be affirmative definitions or factual scene labels. No editorial chatter. Use the supplied exact Chinese copy, fitting labels with excellent spacing; line breaks can be adjusted for readability. Exact content: 保持原有三个递增台阶和两条升级箭头的布局，使用灰白、天蓝、金黄，蓝色与金黄鲜明干净。标题：组织的三重境界；副题：能力的保存方式与更新方式；左上概述：两次升级：让方法可传递，让方法可修订。第一阶：①人治组织／能力依附个人／协作依靠指令与经验／发展重点：保存可传递的方法。第二阶：②流程组织／能力进入共同方法／稳定·可复制·可规模化／发展重点：保持方法与现实相适应。第三阶：③学习型组织／能力随实践持续更新／流程：当前可用的方法／清单：识别风险与核查要求／复盘：形成具体更新／例外：提供修订线索／持续使用，持续维护。两箭头文字：升级①：把能力写成方法；升级②：建立方法修订机制。底部：组织在接续能力的基础上，持续修订能力。 Output one full image. Do not invent facts, components, extra arrows or scenes. Keep adult professional characters where present. Typography must be crisp and accurate. This is an edited course figure; retain a discreet source credit.",
+      "reference": "85e91dfd3f53c9e3.png"
+    },
+    {
+      "key": "zh-08",
+      "prompt": "Use case: scientific-educational / text-localization. Edit the attached source course image into a carefully typeset SIMPLIFIED CHINESE article figure. Preserve the source's meaningful layout, hierarchy, original scene/panel count and arrow relationships; improve clarity, not conceptual scope. Colors: rich professional navy and blue, vivid coral and gold on clean white, bright and lively comic scenes when present, absolutely no sage-green monochrome theme. All text must be affirmative definitions or factual scene labels. No editorial chatter. Use the supplied exact Chinese copy, fitting labels with excellent spacing; line breaks can be adjusted for readability. Exact content: 保持原有海军蓝、金黄的完整分区信息图构图、五个编号板块、图标丰富的形状表达和清楚的视觉层级。避免复杂交叉线，连接准确。标题：流程、清单和经验库：组织能力的积累；副题：智件(Cogware)：方法、标准与经验；横幅：制度协调协作，智件沉淀能力。1核心框架：人＋制度＋智件；只有智件向下分解成技能、护栏、记忆。严格注意三个子框的连接干线源头只来自智件，制度节点正下方留白，与下层支线不连接。三个子框：技能(Skill)／将意图转化为稳定行动；护栏(Guardrail)／在关键节点确认要求；记忆(Memory)／保存经验，支持后续应用。2三者详解：技能／流程·SOP·Playbook／方法可传递，行动可重复；护栏／清单·验收条件·风险边界／行动前核查关键要求；记忆／最佳实践·复盘·失败案例·知识库／提炼机制与条件，供后来者使用。3经典案例：华为IPD／跨职能团队执行共同方法；手术清单／共同暂停，确认关键事项；航天归零／查清故障，改进相关系统。4好方法的一生：发现→实验→记忆→技能→护栏→回写；下面一句：创新提供候选方法，实验筛选，三类智件保存并发展经验。5组织进阶：人治组织／能力依附个人；流程组织／方法支持稳定协作；学习型组织／实践持续修订方法；右侧小区：小团队靠默契，大组织靠接口。底部领导者提示4图标：理清价值流；安排方法与接口；核查关键动作；记录结果并修订。最底：方法可传承，要求可核查，经验可积累。 Output one full image. Do not invent facts, components, extra arrows or scenes. Keep adult professional characters where present. Typography must be crisp and accurate. This is an edited course figure; retain a discreet source credit.",
+      "reference": "7931796224370795.png"
+    }
+  ],
+  "englishCorrectionInstructions": [
+    [
+      "05",
+      "Keep all seven comic panels and every character/object exactly as in this image. Edit only two things: (1) Panel 1 chart vertical-axis unit must be 'RMB 10,000' with ticks 0,100,200,300; the red bar explicitly says 'Annual loss RMB 3M' and the green bar explicitly says 'Annual savings RMB 1.2M'. They are two labeled metrics. (2) Panel 6 right-side guardrail placard uses these four affirmative labels: 'Evidence-based benefit claims'; 'Pricing within authority'; 'Key information retained'; 'Risks assessed first'. Keep the readable layout, strong comic color and original credit."
+    ],
+    [
+      "07",
+      "Preserve the three ascending steps and the two arrows, blue-and-gold palette and all meaningful distinctions. Replace the top-left paragraph with 'Two transitions: make methods transferable, then keep them revisable.' Replace the first step risk note with 'Development priority: make expertise transferable'. Replace the second step risk note with 'Development priority: keep methods responsive to reality'. Replace the bottom sentence with 'Capability advances through methods that can be used and revised.' All other labels and layout stay the same. Typeset clearly."
+    ],
+    [
+      "08",
+      "Fix a critical hierarchy error in the top core-model panel. The ONLY parent of Skill, Guardrail and Memory is COGWARE. Remove the vertical connector from the INSTITUTIONAL RULES circle entirely; leave a clear gap under that circle. Route a connector from the COGWARE circle DOWN to a horizontal branch BELOW all circles; that branch points to the three component cards. The junction under the middle circle must have no line touching that circle. The People and Institutional rules circles have NO downward decomposition connectors. Keep the rest of the five-section navy and gold infographic layout and icons. Replace the Skill section2 bottom caption with 'Codified methods make capability transferable and repeatable.' Replace Memory section2 bottom caption with 'Record mechanisms and conditions so later work can use the experience.' Replace aerospace section3 caption with 'Investigate the incident and improve related systems.' Replace lifecycle footer with 'Discovery creates candidates; experiments select; skills, checks and experience retain and develop learning.' These are affirmative definitions. All other substantive content remains. Legible, crisp type, do not add claims."
+    ]
+  ],
+  "chineseFinalCorrection": "Use case: precise-object-edit. Make ONE correction to this Simplified Chinese infographic. In the top 核心框架 panel, the horizontal branch below 智件 currently has arrows to 技能 and 记忆. Add the missing SHORT vertical downward arrow from the middle of THAT EXISTING HORIZONTAL BRANCH to the top center of the 护栏 card. Exactly THREE child arrows must terminate on 技能、护栏、记忆. The only parent of that branch is 智件. Keep clear WHITE SPACE between the 制度 circle above and the horizontal branch, so 制度 has NO downward connector to the components. The new center arrow begins at the branch line, NOT at the 制度 circle. Preserve every other object, label, character, color, layout and border exactly. Deliver the full image.",
+  "chineseCleanup": "Precise-object-edit. In this full Chinese infographic, remove ONLY the tiny stray grey vertical arrow BETWEEN SECTION 1 AND SECTION 2, directly under the central 护栏 card of section 1 and directly above the orange 护栏 header of section 2. Leave clean white space and the blue dotted horizontal section separator there. Preserve the THREE dark blue arrows ABOVE section 1 component cards, including the newly corrected middle arrow from the horizontal branch into 护栏. Those three upper arrows must stay. Preserve ALL other contents, structure, icons, Chinese words, colors and layout pixel-for-pixel as closely as possible. Output the full image.",
+  "englishInitialLocalizationBrief": "Retain all original figure layouts, panels, scene actions and meaningful arrows; replace Chinese labels with complete English translations and preserve credit.",
+  "englishFinalCorrectionBrief": "Add the missing middle arrow from the Cogware-only branch into Guardrail; retain the white gap beneath Institutional rules."
+}
